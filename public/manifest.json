@@ -1,0 +1,35 @@
+{
+  "name": "Mechiee — Doorstep Bike Service",
+  "short_name": "Mechiee",
+  "description": "Book two-wheeler servicing at your doorstep",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0F",
+  "theme_color": "#7C3AED",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["automotive", "utilities"],
+  "lang": "en-IN",
+  "shortcuts": [
+    {
+      "name": "Book Service",
+      "short_name": "Book",
+      "description": "Book a new bike service",
+      "url": "/bookings/new",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

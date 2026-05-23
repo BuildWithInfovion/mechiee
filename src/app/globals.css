@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 10% 4%;
+    --foreground: 240 5% 96%;
+
+    --card: 240 6% 10%;
+    --card-foreground: 240 5% 96%;
+
+    --popover: 240 6% 10%;
+    --popover-foreground: 240 5% 96%;
+
+    --primary: 263 70% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 240 5% 80%;
+
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 55%;
+
+    --accent: 263 70% 58%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 158 64% 40%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+
+    --border: 240 4% 18%;
+    --input: 240 4% 18%;
+    --ring: 263 70% 58%;
+
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-sm border border-border rounded-xl;
+  }
+
+  .page-container {
+    @apply max-w-screen-sm mx-auto px-4 py-6 pb-24;
+  }
+
+  .section-title {
+    @apply text-lg font-semibold text-foreground mb-3;
+  }
+
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+
+  .status-dot {
+    @apply w-1.5 h-1.5 rounded-full bg-current;
+  }
+
+  .bottom-nav-item {
+    @apply flex flex-col items-center gap-1 py-2 px-4 text-muted-foreground transition-colors;
+  }
+
+  .bottom-nav-item.active {
+    @apply text-primary;
+  }
+
+  .input-floating {
+    @apply w-full bg-secondary border border-input rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground font-semibold px-6 py-3 text-sm transition-all hover:opacity-90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-secondary text-secondary-foreground font-medium px-6 py-3 text-sm transition-all hover:bg-secondary/80 active:scale-95 disabled:opacity-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full text-muted-foreground font-medium px-4 py-2 text-sm transition-all hover:text-foreground hover:bg-secondary/60;
+  }
+
+  .card-hover {
+    @apply transition-all duration-200 hover:border-primary/30 hover:bg-card/90 cursor-pointer;
+  }
+
+  .sidebar-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-secondary/60;
+  }
+
+  .sidebar-item.active {
+    @apply text-foreground bg-secondary;
+  }
+
+  .stat-card {
+    @apply bg-card border border-border rounded-xl p-4 flex flex-col gap-1;
+  }
+
+  .otp-input {
+    @apply w-12 h-14 text-center text-xl font-bold bg-secondary border border-input rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all;
+  }
+
+  .step-indicator {
+    @apply w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all;
+  }
+
+  .step-indicator.active {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  .step-indicator.completed {
+    @apply bg-success text-success-foreground;
+  }
+
+  .step-indicator.inactive {
+    @apply bg-secondary text-muted-foreground;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .safe-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
