@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { MapPin, Phone, MessageCircle, Clock, Save, Camera } from "lucide-react";
+import { useState, useEffect } from "react";
+import { MapPin, Phone, MessageCircle, Clock, Save, Camera, Loader2 } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -22,20 +23,42 @@ const DEFAULT_HOURS: Record<string, DayHours> = {
 };
 
 export default function GarageProfilePage() {
+  const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
-    name: "Sharma Auto Works",
-    description: "Expert two-wheeler servicing with 10+ years of experience. We handle all major brands.",
-    phone: "9876543210",
-    whatsapp: "9876543210",
-    address: "14B, MG Road, Koramangala",
-    city: "Bengaluru",
-    area: "Koramangala",
-    pincode: "560034",
+    name: "",
+    description: "",
+    phone: "",
+    whatsapp_number: "",
+    address: "",
+    city: "",
+    area: "",
+    pincode: "",
   });
-
   const [hours, setHours] = useState<Record<string, DayHours>>(DEFAULT_HOURS);
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/garage/profile")
+      .then((r) => r.json())
+      .then(({ garage }) => {
+        if (garage) {
+          setForm({
+            name: garage.name ?? "",
+            description: garage.description ?? "",
+            phone: (garage.phone ?? "").replace("+91", ""),
+            whatsapp_number: (garage.whatsapp_number ?? "").replace("+91", ""),
+            address: garage.address ?? "",
+            city: garage.city ?? "",
+            area: garage.area ?? "",
+            pincode: garage.pincode ?? "",
+          });
+          if (garage.operating_hours) {
+            setHours({ ...DEFAULT_HOURS, ...garage.operating_hours });
+          }
+        }
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   function handleChange(field: string, value: string) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -51,10 +74,40 @@ export default function GarageProfilePage() {
 
   async function handleSave() {
     setSaving(true);
-    await new Promise((r) => setTimeout(r, 1000));
-    setSaving(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    try {
+      const res = await fetch("/api/garage/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          description: form.description,
+          phone: form.phone ? `+91${form.phone}` : undefined,
+          whatsapp_number: form.whatsapp_number ? `+91${form.whatsapp_number}` : undefined,
+          address: form.address,
+          city: form.city,
+          area: form.area,
+          pincode: form.pincode,
+          operating_hours: hours,
+        }),
+      });
+      if (!res.ok) {
+        const d = await res.json();
+        throw new Error(d.error ?? "Failed to save");
+      }
+      toast.success("Profile saved!");
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background md:pl-60 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
@@ -102,7 +155,9 @@ export default function GarageProfilePage() {
           ))}
 
           <div>
-            <label className="text-xs text-muted-foreground mb-1 block">Full Address</label>
+            <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+              <MapPin className="w-3 h-3" /> Full Address
+            </label>
             <textarea
               value={form.address}
               onChange={(e) => handleChange("address", e.target.value)}
@@ -117,6 +172,7 @@ export default function GarageProfilePage() {
               value={form.description}
               onChange={(e) => handleChange("description", e.target.value)}
               rows={3}
+              placeholder="Tell customers about your garage..."
               className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary resize-none"
             />
           </div>
@@ -136,6 +192,7 @@ export default function GarageProfilePage() {
                 type="tel"
                 value={form.phone}
                 onChange={(e) => handleChange("phone", e.target.value.replace(/\D/g, "").slice(0, 10))}
+                placeholder="98765 43210"
                 className="flex-1 bg-transparent text-sm text-foreground focus:outline-none"
               />
             </div>
@@ -149,8 +206,9 @@ export default function GarageProfilePage() {
               <span className="text-muted-foreground text-sm">+91</span>
               <input
                 type="tel"
-                value={form.whatsapp}
-                onChange={(e) => handleChange("whatsapp", e.target.value.replace(/\D/g, "").slice(0, 10))}
+                value={form.whatsapp_number}
+                onChange={(e) => handleChange("whatsapp_number", e.target.value.replace(/\D/g, "").slice(0, 10))}
+                placeholder="98765 43210"
                 className="flex-1 bg-transparent text-sm text-foreground focus:outline-none"
               />
             </div>
@@ -206,7 +264,7 @@ export default function GarageProfilePage() {
           className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3 rounded-xl font-semibold disabled:opacity-60"
         >
           <Save className="w-4 h-4" />
-          {saving ? "Saving…" : saved ? "Saved!" : "Save Changes"}
+          {saving ? "Saving…" : "Save Changes"}
         </button>
       </div>
     </div>
