@@ -32,7 +32,7 @@ export function AdminSidebar() {
   return (
     <aside className="hidden md:flex flex-col w-60 min-h-screen bg-card border-r border-border p-4 gap-1 fixed left-0 top-0">
       <div className="flex items-center gap-2 px-3 py-4 mb-2">
-        <img src="/logo.png" alt="Mechiee" className="h-8 w-auto invert" />
+        <img src="/logo.png" alt="Mechiee" className="h-8 w-auto mix-blend-screen" />
         <span className="flex items-center gap-1 text-xs text-primary ml-auto">
           <ShieldCheck className="w-3 h-3" /> Admin
         </span>
