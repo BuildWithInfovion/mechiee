@@ -44,7 +44,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm space-y-8 animate-fade-in">
         {/* Logo */}
         <div className="flex flex-col items-center gap-3">
-          <img src="/logo.png" alt="Mechiee" className="h-28 w-auto mix-blend-screen" />
+          <img src="/logo.png" alt="Mechiee" className="w-72 h-auto mix-blend-screen" />
           <p className="text-sm text-muted-foreground">Doorstep bike service, at your fingertips</p>
         </div>
 

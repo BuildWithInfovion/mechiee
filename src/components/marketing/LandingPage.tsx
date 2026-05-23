@@ -59,7 +59,7 @@ export function LandingPage() {
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/">
-            <img src="/logo.png" alt="Mechiee" className="h-12 w-auto mix-blend-screen" />
+            <img src="/logo.png" alt="Mechiee" className="w-44 h-auto mix-blend-screen" />
           </Link>
 
           {/* Desktop nav */}
@@ -365,7 +365,7 @@ export function LandingPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
             <div className="col-span-2 md:col-span-1">
-              <img src="/logo.png" alt="Mechiee" className="h-14 w-auto mix-blend-screen mb-4" />
+              <img src="/logo.png" alt="Mechiee" className="w-52 h-auto mix-blend-screen mb-4" />
               <p className="text-xs text-muted-foreground leading-relaxed mb-4">
                 India's doorstep two-wheeler service platform. Trusted by 10,000+ bike owners.
               </p>
