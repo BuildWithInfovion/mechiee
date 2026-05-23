@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { CalendarDays, Search, IndianRupee } from "lucide-react";
@@ -48,7 +48,7 @@ export default function AdminBookingsPage() {
           <div className="glass-card p-3 text-center"><p className="text-xl font-bold text-foreground">{bookings.length}</p><p className="text-xs text-muted-foreground">Total</p></div>
           <div className="glass-card p-3 text-center"><p className="text-xl font-bold text-warning">{bookings.filter(b=>b.status==="pending").length}</p><p className="text-xs text-muted-foreground">Pending</p></div>
           <div className="glass-card p-3 text-center"><p className="text-xl font-bold text-success">{bookings.filter(b=>b.status==="completed").length}</p><p className="text-xs text-muted-foreground">Completed</p></div>
-          <div className="glass-card p-3 text-center"><p className="text-xl font-bold text-foreground">₹{(totalRevenue/1000).toFixed(1)}k</p><p className="text-xs text-muted-foreground">Revenue</p></div>
+          <div className="glass-card p-3 text-center"><p className="text-xl font-bold text-foreground">â‚¹{(totalRevenue/1000).toFixed(1)}k</p><p className="text-xs text-muted-foreground">Revenue</p></div>
         </div>
 
         <div className="relative mb-3">
@@ -94,3 +94,4 @@ export default function AdminBookingsPage() {
     </div>
   );
 }
+

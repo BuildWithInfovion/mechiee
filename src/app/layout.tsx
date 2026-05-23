@@ -1,9 +1,9 @@
-import type { Metadata, Viewport } from "next";
+﻿import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Mechiee — Doorstep Bike Service",
+    default: "Mechiee â€” Doorstep Bike Service",
     template: "%s | Mechiee",
   },
   description:
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Mechiee",
   },
   openGraph: {
-    title: "Mechiee — Doorstep Bike Service",
+    title: "Mechiee â€” Doorstep Bike Service",
     description: "Book two-wheeler servicing at your doorstep.",
     type: "website",
   },
@@ -50,3 +50,4 @@ export default function RootLayout({
     </html>
   );
 }
+

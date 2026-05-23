@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+﻿import { redirect } from "next/navigation";
 import { LandingPage } from "@/components/marketing/LandingPage";
 
 export default async function RootPage() {
@@ -26,3 +26,4 @@ export default async function RootPage() {
 
   return <LandingPage />;
 }
+

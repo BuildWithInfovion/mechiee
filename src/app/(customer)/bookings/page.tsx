@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { CalendarDays, ChevronRight, Bike } from "lucide-react";
@@ -106,7 +106,7 @@ function BookingCard({ booking }: { booking: Booking }) {
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
             <Bike className="w-3.5 h-3.5" />
             <span>{booking.garage?.name ?? "Garage"}</span>
-            <span>•</span>
+            <span>â€¢</span>
             <span>{booking.vehicle?.make} {booking.vehicle?.model}</span>
           </div>
 
@@ -130,3 +130,4 @@ function BookingCard({ booking }: { booking: Booking }) {
     </Link>
   );
 }
+

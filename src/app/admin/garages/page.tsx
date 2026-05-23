@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { Building2, CheckCircle2, XCircle, ChevronRight, Search } from "lucide-react";
@@ -93,12 +93,12 @@ export default function AdminGaragesPage() {
                             {garage.status}
                           </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-0.5">{garage.area ?? garage.city} · {garage.pincode}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{garage.area ?? garage.city} Â· {garage.pincode}</p>
                         <p className="text-xs text-muted-foreground">{garage.phone}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="text-right">
-                          <p className="text-sm font-medium text-foreground">★ {garage.rating?.toFixed(1)}</p>
+                          <p className="text-sm font-medium text-foreground">â˜… {garage.rating?.toFixed(1)}</p>
                           <p className="text-xs text-muted-foreground">{garage.total_jobs} jobs</p>
                         </div>
                         <ChevronRight className="w-4 h-4 text-muted-foreground" />
@@ -114,3 +114,4 @@ export default function AdminGaragesPage() {
     </div>
   );
 }
+

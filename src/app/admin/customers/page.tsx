@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { Users, Phone, Calendar, ShoppingBag, Search } from "lucide-react";
@@ -61,7 +61,7 @@ export default function AdminCustomersPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <p className="text-sm font-semibold text-foreground">{c.name || "—"}</p>
+                      <p className="text-sm font-semibold text-foreground">{c.name || "â€”"}</p>
                       <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5"><Phone className="w-3 h-3" /><span>+91 {c.phone.replace(/^91/,"")}</span></div>
                     </div>
                     <span className={cn("text-xs px-2 py-0.5 rounded-full border", c.is_active ? "text-success bg-success/10 border-success/20" : "text-muted-foreground bg-muted/10 border-muted/20")}>{c.is_active ? "Active" : "Inactive"}</span>
@@ -80,3 +80,4 @@ export default function AdminCustomersPage() {
     </div>
   );
 }
+

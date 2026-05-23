@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -49,7 +49,7 @@ export default function OnboardPage() {
           </div>
           <h1 className="text-2xl font-bold text-foreground">Welcome to Mechiee!</h1>
           <p className="text-sm text-muted-foreground">
-            Just one more step — what should we call you?
+            Just one more step â€” what should we call you?
           </p>
         </div>
 
@@ -78,3 +78,4 @@ export default function OnboardPage() {
     </div>
   );
 }
+

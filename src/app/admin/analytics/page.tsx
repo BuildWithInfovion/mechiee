@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { TrendingUp, IndianRupee, Users, Building2, ShoppingBag, Star, ArrowUpRight } from "lucide-react";
@@ -52,14 +52,14 @@ export default function AdminAnalyticsPage() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           {[
-            {label:"Total Revenue",value:`₹${((stats?.total_revenue??0)/1000).toFixed(0)}k`,icon:IndianRupee,color:"text-success"},
+            {label:"Total Revenue",value:`â‚¹${((stats?.total_revenue??0)/1000).toFixed(0)}k`,icon:IndianRupee,color:"text-success"},
             {label:"Total Bookings",value:String(stats?.total_bookings??0),icon:ShoppingBag,color:"text-primary"},
             {label:"Active Garages",value:String((stats?.total_garages??0)-(stats?.pending_garages??0)),icon:Building2,color:"text-warning"},
             {label:"Customers",value:String(stats?.total_customers??0),icon:Users,color:"text-blue-400"},
           ].map(({label,value,icon:Icon,color})=>(
             <div key={label} className="glass-card p-4">
               <div className="flex items-center gap-2 mb-2"><Icon className={`w-4 h-4 ${color}`}/><span className="text-xs text-muted-foreground">{label}</span></div>
-              <p className="text-xl font-bold text-foreground">{loading?"…":value}</p>
+              <p className="text-xl font-bold text-foreground">{loading?"â€¦":value}</p>
             </div>
           ))}
         </div>
@@ -72,10 +72,10 @@ export default function AdminAnalyticsPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#2D2D35" vertical={false}/>
                 <XAxis dataKey="month" tick={{fill:"#71717A",fontSize:11}} axisLine={false} tickLine={false}/>
                 <YAxis yAxisId="left" tick={{fill:"#71717A",fontSize:11}} axisLine={false} tickLine={false}/>
-                <YAxis yAxisId="right" orientation="right" tick={{fill:"#71717A",fontSize:11}} axisLine={false} tickLine={false} tickFormatter={v=>`₹${(v/1000).toFixed(0)}k`}/>
+                <YAxis yAxisId="right" orientation="right" tick={{fill:"#71717A",fontSize:11}} axisLine={false} tickLine={false} tickFormatter={v=>`â‚¹${(v/1000).toFixed(0)}k`}/>
                 <Tooltip contentStyle={{backgroundColor:"#1A1A1F",border:"1px solid #2D2D35",borderRadius:8,color:"#F4F4F5"}}/>
                 <Bar yAxisId="left" dataKey="bookings" fill="#7C3AED" radius={[4,4,0,0]} name="Bookings"/>
-                <Bar yAxisId="right" dataKey="revenue" fill="#10B981" radius={[4,4,0,0]} name="Revenue (₹)" opacity={0.7}/>
+                <Bar yAxisId="right" dataKey="revenue" fill="#10B981" radius={[4,4,0,0]} name="Revenue (â‚¹)" opacity={0.7}/>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -108,14 +108,14 @@ export default function AdminAnalyticsPage() {
             <h2 className="text-sm font-semibold text-foreground mb-4">Platform Health</h2>
             <div className="space-y-3">
               {[
-                {label:"Completion Rate",value:stats?`${Math.round(((stats.completed_bookings??0)/(stats.total_bookings||1))*100)}%`:"—",note:"Bookings completed vs total"},
+                {label:"Completion Rate",value:stats?`${Math.round(((stats.completed_bookings??0)/(stats.total_bookings||1))*100)}%`:"â€”",note:"Bookings completed vs total"},
                 {label:"Pending Approvals",value:String(stats?.pending_garages??0),note:"Garages awaiting review"},
                 {label:"Total Garages",value:String(stats?.total_garages??0),note:"On platform"},
                 {label:"Active Bookings",value:String(stats?.pending_bookings??0),note:"Currently in progress"},
               ].map(({label,value,note})=>(
                 <div key={label} className="flex items-center justify-between">
                   <div><p className="text-xs font-medium text-foreground">{label}</p><p className="text-xs text-muted-foreground">{note}</p></div>
-                  <span className="text-sm font-bold text-foreground">{loading?"…":value}</span>
+                  <span className="text-sm font-bold text-foreground">{loading?"â€¦":value}</span>
                 </div>
               ))}
             </div>
@@ -129,9 +129,9 @@ export default function AdminAnalyticsPage() {
               {topGarages.map((g,i)=>(
                 <div key={g.name} className="flex items-center gap-3">
                   <span className="text-xs font-bold text-muted-foreground w-5 text-center">{i+1}</span>
-                  <div className="flex-1 min-w-0"><p className="text-sm font-medium text-foreground truncate">{g.name}</p><p className="text-xs text-muted-foreground">{g.city} · {g.bookings} bookings</p></div>
+                  <div className="flex-1 min-w-0"><p className="text-sm font-medium text-foreground truncate">{g.name}</p><p className="text-xs text-muted-foreground">{g.city} Â· {g.bookings} bookings</p></div>
                   <div className="text-right flex-none">
-                    <p className="text-sm font-bold text-foreground">₹{(g.revenue/1000).toFixed(1)}k</p>
+                    <p className="text-sm font-bold text-foreground">â‚¹{(g.revenue/1000).toFixed(1)}k</p>
                     {g.rating&&<div className="flex items-center gap-0.5 justify-end"><Star className="w-3 h-3 text-warning fill-warning"/><span className="text-xs text-muted-foreground">{g.rating}</span></div>}
                   </div>
                 </div>
@@ -143,3 +143,4 @@ export default function AdminAnalyticsPage() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -206,7 +206,7 @@ function BookingWizardInner() {
                     <CardContent className="p-4 flex items-center justify-between">
                       <div>
                         <p className="font-medium text-sm text-foreground">{v.make} {v.model}</p>
-                        {v.year && <p className="text-xs text-muted-foreground">{v.year} · {v.fuel_type}</p>}
+                        {v.year && <p className="text-xs text-muted-foreground">{v.year} Â· {v.fuel_type}</p>}
                       </div>
                       {selectedVehicle?.id === v.id && <CheckCircle2 className="w-5 h-5 text-primary" />}
                     </CardContent>
@@ -339,3 +339,4 @@ export default function NewBookingPage() {
     </Suspense>
   );
 }
+

@@ -32,7 +32,7 @@ export function GarageSidebar() {
   return (
     <aside className="hidden md:flex flex-col w-60 min-h-screen bg-card border-r border-border p-4 gap-1 fixed left-0 top-0">
       <div className="flex items-center gap-2 px-3 py-4 mb-2">
-        <img src="/logo.png" alt="Mechiee" className="h-8 w-auto brightness-0 invert" />
+        <img src="/logo.png" alt="Mechiee" className="h-8 w-auto invert" />
         <span className="text-xs text-muted-foreground ml-auto">Garage</span>
       </div>
 

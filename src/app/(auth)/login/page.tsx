@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -44,7 +44,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm space-y-8 animate-fade-in">
         {/* Logo */}
         <div className="flex flex-col items-center gap-3">
-          <img src="/logo.png" alt="Mechiee" className="h-16 w-auto brightness-0 invert" />
+          <img src="/logo.png" alt="Mechiee" className="h-16 w-auto invert" />
           <p className="text-sm text-muted-foreground">Doorstep bike service, at your fingertips</p>
         </div>
 
@@ -110,3 +110,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

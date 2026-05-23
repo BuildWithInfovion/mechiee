@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { MapPin, Search, Bell, Bike, ChevronRight, Star } from "lucide-react";
@@ -71,7 +71,7 @@ export default function CustomerHomePage() {
         <div className="max-w-screen-sm mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <img src="/logo.png" alt="Mechiee" className="h-8 w-auto brightness-0 invert" />
+              <img src="/logo.png" alt="Mechiee" className="h-8 w-auto invert" />
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
                 <MapPin className="w-3 h-3" />
                 <span>{searchCity}</span>
@@ -213,3 +213,4 @@ function GarageCard({ garage }: { garage: Garage }) {
     </Link>
   );
 }
+

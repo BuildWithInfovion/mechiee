@@ -1,4 +1,4 @@
-import { AdminSidebar } from "@/components/shared/AdminSidebar";
+﻿import { AdminSidebar } from "@/components/shared/AdminSidebar";
 import { Toaster } from "@/components/ui/toaster";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -12,3 +12,4 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
+

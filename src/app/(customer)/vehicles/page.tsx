@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { Plus, Bike, Trash2, X, Check } from "lucide-react";
@@ -66,7 +66,7 @@ export default function VehiclesPage() {
               </div>
               <div className="flex-1">
                 <p className="font-semibold text-foreground">{v.make} {v.model}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{v.year} · {v.color}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{v.year} Â· {v.color}</p>
                 <div className="flex items-center gap-2 mt-2">
                   <span className="text-xs px-2 py-0.5 rounded-full bg-card border border-border text-muted-foreground font-mono">{v.registration_number || "No plate"}</span>
                   <span className={cn("text-xs px-2 py-0.5 rounded-full border", v.fuel_type === "electric" ? "bg-success/10 text-success border-success/20" : "bg-warning/10 text-warning border-warning/20")}>{v.fuel_type}</span>
@@ -120,7 +120,7 @@ export default function VehiclesPage() {
               </div>
             </div>
             <button onClick={handleAdd} disabled={saving || !form.make || !form.model} className="w-full bg-primary text-white py-3 rounded-xl font-semibold disabled:opacity-50">
-              {saving ? "Adding…" : "Add Vehicle"}
+              {saving ? "Addingâ€¦" : "Add Vehicle"}
             </button>
           </div>
         </div>
@@ -128,3 +128,4 @@ export default function VehiclesPage() {
     </div>
   );
 }
+
