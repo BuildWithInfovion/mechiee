@@ -86,6 +86,8 @@ export default function BookingsPage() {
 }
 
 function BookingCard({ booking }: { booking: Booking }) {
+  const isPending = booking.status === "pending" && !booking.garage_id;
+
   return (
     <Link href={`/bookings/${booking.id}`}>
       <Card className="card-hover border-border">
@@ -99,16 +101,26 @@ function BookingCard({ booking }: { booking: Booking }) {
             </div>
             <span className={`status-badge ${getStatusColor(booking.status)}`}>
               <span className="status-dot bg-current" />
-              {getStatusLabel(booking.status)}
+              {isPending ? "Searching..." : getStatusLabel(booking.status)}
             </span>
           </div>
 
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
             <Bike className="w-3.5 h-3.5" />
-            <span>{booking.garage?.name ?? "Garage"}</span>
-            <span>â€¢</span>
+            {booking.garage_id && booking.garage ? (
+              <span>{booking.garage.name}</span>
+            ) : (
+              <span className="italic">Finding mechanic...</span>
+            )}
+            <span>·</span>
             <span>{booking.vehicle?.make} {booking.vehicle?.model}</span>
           </div>
+
+          {(booking.status === "completed" || booking.status === "accepted") && booking.garage && (
+            <div className="text-xs text-emerald-400 font-medium mb-2">
+              {booking.status === "completed" ? "Serviced by" : "Assigned to"}: {booking.garage.name}
+            </div>
+          )}
 
           <div className="flex items-center justify-between">
             <div className="text-xs text-muted-foreground">

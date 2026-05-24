@@ -70,28 +70,32 @@ export async function notifyGarageNewBooking(params: {
   garageWhatsApp: string;
   bookingNumber: string;
   customerName: string;
-  customerPhone: string;
   vehicleName: string;
   serviceName: string;
-  address: string;
+  area: string;
+  distanceKm: number;
   date: string;
   time: string;
   estimatedPrice: number;
   bookingLink: string;
 }) {
-  const message = `🔧 *New Service Request — Mechiee*
+  const distStr =
+    params.distanceKm < 1
+      ? `${Math.round(params.distanceKm * 1000)}m away`
+      : `${params.distanceKm.toFixed(1)}km away`;
+
+  const message = `🔔 *New Service Request Near You — Mechiee*
 
 📋 Booking *${params.bookingNumber}*
-👤 Customer: ${params.customerName}
-📱 Phone: ${formatPhone(params.customerPhone)}
-🚲 Vehicle: ${params.vehicleName}
 🔧 Service: ${params.serviceName}
-📍 Address: ${params.address}
-📅 Date: ${params.date} at ${params.time}
+🚲 Vehicle: ${params.vehicleName}
+📍 Area: ${params.area} (${distStr})
+📅 ${params.date} at ${params.time}
 💰 Estimated: ₹${params.estimatedPrice}
 
-👉 View & Accept: ${params.bookingLink}
+✅ Accept now: ${params.bookingLink}
 
+⏱️ _First garage to accept gets this job!_
 _Mechiee — Doorstep Bike Service_`;
 
   return sendTextMessage({ to: params.garageWhatsApp, text: message });

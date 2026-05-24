@@ -2,25 +2,36 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Bike, MapPin, Phone, FileText, CheckCircle2 } from "lucide-react";
+import { Bike, MapPin, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 
-const SERVICES = [
-  "general_service", "repair", "tyres", "battery", "washing", "other"
+const SERVICE_TYPES = [
+  { value: "general_service", label: "General Service" },
+  { value: "oil_change", label: "Oil Change" },
+  { value: "tyres", label: "Tyres & Wheels" },
+  { value: "battery", label: "Battery" },
+  { value: "electrical", label: "Electrical" },
+  { value: "washing", label: "Wash & Detailing" },
+  { value: "repair", label: "Major Repairs" },
 ];
-const SERVICE_LABELS: Record<string, string> = {
-  general_service: "General Service",
-  repair: "Repairs",
-  tyres: "Tyres",
-  battery: "Battery",
-  washing: "Washing",
-  other: "Other",
-};
+
+const VEHICLE_BRANDS = [
+  { value: "honda", label: "Honda" },
+  { value: "yamaha", label: "Yamaha" },
+  { value: "tvs", label: "TVS" },
+  { value: "hero", label: "Hero" },
+  { value: "bajaj", label: "Bajaj" },
+  { value: "royal_enfield", label: "Royal Enfield" },
+  { value: "suzuki", label: "Suzuki" },
+  { value: "kawasaki", label: "Kawasaki" },
+  { value: "other", label: "Other" },
+];
+
+const STEP_LABELS = ["Details", "Location", "Services", "Specialties"];
 
 export default function GarageRegisterPage() {
   const router = useRouter();
@@ -39,16 +50,18 @@ export default function GarageRegisterPage() {
     area: "",
     pincode: "",
     services: [] as string[],
+    vehicle_specialties: [] as string[],
+    service_specialties: [] as string[],
   });
 
   function update(key: string, value: unknown) {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
-  function toggleService(s: string) {
+  function toggleArray(key: "services" | "vehicle_specialties" | "service_specialties", val: string) {
     setForm((f) => ({
       ...f,
-      services: f.services.includes(s) ? f.services.filter((x) => x !== s) : [...f.services, s],
+      [key]: f[key].includes(val) ? f[key].filter((x) => x !== val) : [...f[key], val],
     }));
   }
 
@@ -70,11 +83,25 @@ export default function GarageRegisterPage() {
       const res = await fetch("/api/garages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          name: form.name,
+          description: form.description,
+          phone: form.phone,
+          whatsapp_number: form.whatsapp_number,
+          address: form.address,
+          lat: form.lat,
+          lng: form.lng,
+          city: form.city,
+          area: form.area,
+          pincode: form.pincode,
+          services: form.services,
+          vehicle_specialties: form.vehicle_specialties,
+          service_specialties: form.service_specialties,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      setStep(3);
+      setStep(4);
     } catch (err) {
       toast.error((err as Error).message);
     } finally {
@@ -82,7 +109,7 @@ export default function GarageRegisterPage() {
     }
   }
 
-  if (step === 3) {
+  if (step === 4) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-6">
         <div className="max-w-sm w-full text-center space-y-4 animate-fade-in">
@@ -114,12 +141,13 @@ export default function GarageRegisterPage() {
             <span className="font-bold text-foreground">Register Your Garage</span>
           </div>
           <div className="flex gap-1">
-            {["Details", "Location", "Services"].map((s, i) => (
+            {STEP_LABELS.map((s, i) => (
               <div key={s} className="flex items-center gap-1 flex-1">
-                <div className={`w-6 h-1 rounded-full transition-all ${i <= step ? "bg-primary" : "bg-secondary"}`} />
+                <div className={`w-full h-1 rounded-full transition-all ${i <= step ? "bg-primary" : "bg-secondary"}`} />
               </div>
             ))}
           </div>
+          <p className="text-xs text-muted-foreground mt-1">{STEP_LABELS[step]}</p>
         </div>
       </div>
 
@@ -197,28 +225,86 @@ export default function GarageRegisterPage() {
           </div>
         )}
 
-        {/* Step 2: Services */}
+        {/* Step 2: Services Offered */}
         {step === 2 && (
           <div className="space-y-4 animate-fade-in">
             <h2 className="section-title">Services Offered</h2>
             <p className="text-sm text-muted-foreground">Select all services your garage provides:</p>
             <div className="grid grid-cols-2 gap-2">
-              {SERVICES.map((s) => (
+              {SERVICE_TYPES.map((s) => (
                 <button
-                  key={s}
-                  onClick={() => toggleService(s)}
+                  key={s.value}
+                  onClick={() => toggleArray("services", s.value)}
                   className={`p-3 rounded-xl text-left text-sm font-medium transition-all border ${
-                    form.services.includes(s)
+                    form.services.includes(s.value)
                       ? "border-primary bg-primary/10 text-foreground"
                       : "border-border bg-secondary text-muted-foreground hover:border-primary/40"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span>{SERVICE_LABELS[s]}</span>
-                    {form.services.includes(s) && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                    <span>{s.label}</span>
+                    {form.services.includes(s.value) && <CheckCircle2 className="w-4 h-4 text-primary" />}
                   </div>
                 </button>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Specialties */}
+        {step === 3 && (
+          <div className="space-y-5 animate-fade-in">
+            <div>
+              <h2 className="section-title">Vehicle Specialties</h2>
+              <p className="text-sm text-muted-foreground mb-3">
+                Which bike brands does your garage specialize in? Leave all unchecked to accept all brands.
+              </p>
+              <div className="grid grid-cols-3 gap-2">
+                {VEHICLE_BRANDS.map((b) => (
+                  <button
+                    key={b.value}
+                    onClick={() => toggleArray("vehicle_specialties", b.value)}
+                    className={`p-2.5 rounded-xl text-center text-sm font-medium transition-all border ${
+                      form.vehicle_specialties.includes(b.value)
+                        ? "border-primary bg-primary/10 text-foreground"
+                        : "border-border bg-secondary text-muted-foreground hover:border-primary/40"
+                    }`}
+                  >
+                    {b.label}
+                  </button>
+                ))}
+              </div>
+              {form.vehicle_specialties.length === 0 && (
+                <p className="text-xs text-muted-foreground mt-2">No selection = accepts all brands</p>
+              )}
+            </div>
+
+            <div>
+              <h2 className="section-title">Service Specialties</h2>
+              <p className="text-sm text-muted-foreground mb-3">
+                Which types of services does your garage specialize in? Leave all unchecked to accept all.
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {SERVICE_TYPES.map((s) => (
+                  <button
+                    key={s.value}
+                    onClick={() => toggleArray("service_specialties", s.value)}
+                    className={`p-3 rounded-xl text-left text-sm font-medium transition-all border ${
+                      form.service_specialties.includes(s.value)
+                        ? "border-primary bg-primary/10 text-foreground"
+                        : "border-border bg-secondary text-muted-foreground hover:border-primary/40"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span>{s.label}</span>
+                      {form.service_specialties.includes(s.value) && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                    </div>
+                  </button>
+                ))}
+              </div>
+              {form.service_specialties.length === 0 && (
+                <p className="text-xs text-muted-foreground mt-2">No selection = accepts all service types</p>
+              )}
             </div>
           </div>
         )}
@@ -227,17 +313,17 @@ export default function GarageRegisterPage() {
       {/* Bottom CTA */}
       <div className="fixed bottom-0 left-0 right-0 px-4 py-4 bg-background/90 backdrop-blur-md border-t border-border safe-bottom">
         <div className="max-w-screen-sm mx-auto">
-          {step < 2 ? (
-            <Button className="w-full" size="lg" onClick={() => setStep(step + 1)}>
-              Continue
-            </Button>
-          ) : (
+          {step < 3 ? (
             <Button
               className="w-full"
               size="lg"
-              onClick={handleSubmit}
-              disabled={loading || form.services.length === 0}
+              onClick={() => setStep(step + 1)}
+              disabled={step === 2 && form.services.length === 0}
             >
+              Continue
+            </Button>
+          ) : (
+            <Button className="w-full" size="lg" onClick={handleSubmit} disabled={loading}>
               {loading ? "Submitting..." : "Submit for Review"}
             </Button>
           )}

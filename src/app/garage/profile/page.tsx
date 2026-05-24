@@ -1,10 +1,32 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MapPin, Phone, MessageCircle, Clock, Save, Camera, Loader2 } from "lucide-react";
+import { MapPin, Phone, MessageCircle, Clock, Save, Camera, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+const SERVICE_TYPES = [
+  { value: "general_service", label: "General Service" },
+  { value: "oil_change", label: "Oil Change" },
+  { value: "tyres", label: "Tyres & Wheels" },
+  { value: "battery", label: "Battery" },
+  { value: "electrical", label: "Electrical" },
+  { value: "washing", label: "Wash & Detailing" },
+  { value: "repair", label: "Major Repairs" },
+];
+
+const VEHICLE_BRANDS = [
+  { value: "honda", label: "Honda" },
+  { value: "yamaha", label: "Yamaha" },
+  { value: "tvs", label: "TVS" },
+  { value: "hero", label: "Hero" },
+  { value: "bajaj", label: "Bajaj" },
+  { value: "royal_enfield", label: "Royal Enfield" },
+  { value: "suzuki", label: "Suzuki" },
+  { value: "kawasaki", label: "Kawasaki" },
+  { value: "other", label: "Other" },
+];
 
 interface DayHours {
   open: string;
@@ -35,6 +57,8 @@ export default function GarageProfilePage() {
     pincode: "",
   });
   const [hours, setHours] = useState<Record<string, DayHours>>(DEFAULT_HOURS);
+  const [vehicleSpecialties, setVehicleSpecialties] = useState<string[]>([]);
+  const [serviceSpecialties, setServiceSpecialties] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -55,6 +79,8 @@ export default function GarageProfilePage() {
           if (garage.operating_hours) {
             setHours({ ...DEFAULT_HOURS, ...garage.operating_hours });
           }
+          if (garage.vehicle_specialties) setVehicleSpecialties(garage.vehicle_specialties);
+          if (garage.service_specialties) setServiceSpecialties(garage.service_specialties);
         }
       })
       .finally(() => setLoading(false));
@@ -88,6 +114,8 @@ export default function GarageProfilePage() {
           area: form.area,
           pincode: form.pincode,
           operating_hours: hours,
+          vehicle_specialties: vehicleSpecialties,
+          service_specialties: serviceSpecialties,
         }),
       });
       if (!res.ok) {
@@ -255,6 +283,60 @@ export default function GarageProfilePage() {
                 </div>
               );
             })}
+          </div>
+        </div>
+
+        {/* Vehicle Specialties */}
+        <div className="glass-card p-4 mb-4">
+          <h2 className="text-sm font-semibold text-foreground mb-1">Vehicle Specialties</h2>
+          <p className="text-xs text-muted-foreground mb-3">
+            Select bike brands you specialize in. Leave all unchecked to accept all brands.
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            {VEHICLE_BRANDS.map((b) => (
+              <button
+                key={b.value}
+                onClick={() => setVehicleSpecialties((prev) =>
+                  prev.includes(b.value) ? prev.filter((x) => x !== b.value) : [...prev, b.value]
+                )}
+                className={`p-2.5 rounded-xl text-center text-xs font-medium transition-all border ${
+                  vehicleSpecialties.includes(b.value)
+                    ? "border-primary bg-primary/10 text-foreground"
+                    : "border-border bg-secondary text-muted-foreground hover:border-primary/40"
+                }`}
+              >
+                <span>{b.label}</span>
+                {vehicleSpecialties.includes(b.value) && <CheckCircle2 className="w-3 h-3 text-primary mx-auto mt-0.5" />}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Service Specialties */}
+        <div className="glass-card p-4 mb-6">
+          <h2 className="text-sm font-semibold text-foreground mb-1">Service Specialties</h2>
+          <p className="text-xs text-muted-foreground mb-3">
+            Select service types you specialize in. Leave all unchecked to accept all.
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {SERVICE_TYPES.map((s) => (
+              <button
+                key={s.value}
+                onClick={() => setServiceSpecialties((prev) =>
+                  prev.includes(s.value) ? prev.filter((x) => x !== s.value) : [...prev, s.value]
+                )}
+                className={`p-3 rounded-xl text-left text-sm font-medium transition-all border ${
+                  serviceSpecialties.includes(s.value)
+                    ? "border-primary bg-primary/10 text-foreground"
+                    : "border-border bg-secondary text-muted-foreground hover:border-primary/40"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span>{s.label}</span>
+                  {serviceSpecialties.includes(s.value) && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                </div>
+              </button>
+            ))}
           </div>
         </div>
 

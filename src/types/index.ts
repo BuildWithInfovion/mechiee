@@ -62,6 +62,8 @@ export interface Garage {
   documents: Record<string, string> | null;
   logo_url: string | null;
   banner_url: string | null;
+  vehicle_specialties: string[];
+  service_specialties: string[];
   created_at: string;
   owner?: User;
   distance_km?: number;
@@ -112,11 +114,22 @@ export interface GarageService {
   service?: ServiceCatalog;
 }
 
+export interface BookingBroadcast {
+  id: string;
+  booking_id: string;
+  garage_id: string;
+  notified_at: string;
+  status: "pending" | "accepted" | "expired";
+  responded_at: string | null;
+  booking?: Booking;
+  distance_km?: number | null;
+}
+
 export interface Booking {
   id: string;
   booking_number: string;
   customer_id: string;
-  garage_id: string;
+  garage_id: string | null;
   vehicle_id: string;
   service_id: string;
   mechanic_id: string | null;
@@ -176,7 +189,6 @@ export interface NearbyGaragesParams {
 }
 
 export interface BookingCreateInput {
-  garage_id: string;
   vehicle_id: string;
   service_id: string;
   scheduled_date: string;
