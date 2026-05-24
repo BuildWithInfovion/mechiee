@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { createAdminClient } from "@/lib/supabase/server";
 import { createHmac } from "crypto";
 
 const OTP_SECRET = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -52,16 +53,33 @@ export async function POST(req: NextRequest) {
     const { email, password } = deriveAuthCredentials(phone);
     const adminClient = await createAdminClient();
 
-    // Create Supabase auth user if this is a first-time login (ignore if already exists)
-    await adminClient.auth.admin.createUser({
-      email,
-      email_confirm: true,
-      password,
-      user_metadata: { phone },
-    }).catch(() => {});
+    // Create Supabase auth user on first login (ignore "already exists" error)
+    await adminClient.auth.admin
+      .createUser({ email, email_confirm: true, password, user_metadata: { phone } })
+      .catch(() => {});
 
-    // Sign in with derived credentials — SSR client sets session cookies automatically
-    const supabase = await createClient();
+    // Collect session cookies produced by signInWithPassword so we can
+    // apply them to the returned NextResponse (cookieStore.set and
+    // NextResponse.cookies are separate — we must bridge them manually)
+    const pendingCookies: Array<{ name: string; value: string; options: CookieOptions }> = [];
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return req.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              pendingCookies.push({ name, value, options: options ?? {} });
+            });
+          },
+        },
+      }
+    );
+
     const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -71,7 +89,7 @@ export async function POST(req: NextRequest) {
 
     const userId = signInData.user.id;
 
-    // Create or fetch app-level user profile
+    // Create or fetch app-level user profile using admin client
     let { data: profile } = await adminClient
       .from("users")
       .select("role, name")
@@ -93,22 +111,26 @@ export async function POST(req: NextRequest) {
     }
 
     const role = profile?.role ?? "customer";
-    // New garage users: send to garage registration instead of customer home
     const isNewUser = !profile?.name;
-    const redirect = isNewUser && from === "garage"
-      ? "/garage/register"
-      : (ROLE_REDIRECTS[role] ?? "/home");
+    const redirect =
+      isNewUser && from === "garage"
+        ? "/garage/register"
+        : (ROLE_REDIRECTS[role] ?? "/home");
 
+    // Build the JSON response
     const response = NextResponse.json({
       success: true,
-      needs_onboarding: !profile?.name && from !== "garage",
+      needs_onboarding: isNewUser && from !== "garage",
       redirect,
     });
 
-    // Clear OTP state cookie
-    response.cookies.delete("otp_state");
+    // Apply session cookies collected from signInWithPassword
+    pendingCookies.forEach(({ name, value, options }) => {
+      response.cookies.set(name, value, options);
+    });
 
-    // Persist role in a long-lived cookie so middleware can redirect without a DB call
+    // Clear OTP state cookie and persist role for proxy fast-path
+    response.cookies.delete("otp_state");
     response.cookies.set("user_role", role, {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",

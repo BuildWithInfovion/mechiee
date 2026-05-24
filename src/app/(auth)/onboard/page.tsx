@@ -29,6 +29,7 @@ export default function OnboardPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Failed to save");
 
+      router.refresh(); // Bust Next.js router cache so root page re-reads the DB
       router.push("/");
     } catch (err) {
       toast.error((err as Error).message);
