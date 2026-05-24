@@ -1,7 +1,7 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PATHS = ["/login", "/verify", "/onboard", "/garage/register"];
+const PUBLIC_PATHS = ["/login", "/verify", "/onboard", "/garage/register", "/garage/login"];
 const ROLE_REDIRECTS: Record<string, string> = {
   customer: "/home",
   garage_owner: "/garage/dashboard",
@@ -48,7 +48,15 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (user && isPublic && path !== "/garage/register") {
+  const REGISTER_PATHS = ["/garage/register", "/onboard"];
+  if (user && isPublic && !REGISTER_PATHS.some((p) => path.startsWith(p))) {
+    // Use cookie for fast redirect; fall back to DB if cookie is missing
+    const roleCookie = request.cookies.get("user_role")?.value;
+    if (roleCookie && ROLE_REDIRECTS[roleCookie]) {
+      return NextResponse.redirect(
+        new URL(ROLE_REDIRECTS[roleCookie], request.url)
+      );
+    }
     const { data: profile } = await supabase
       .from("users")
       .select("role")
