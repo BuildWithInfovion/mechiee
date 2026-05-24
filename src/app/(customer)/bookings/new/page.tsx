@@ -62,7 +62,7 @@ function BookingWizardInner() {
       fetch("/api/service-catalog").then((r) => r.json()),
       fetch("/api/vehicles").then((r) => r.json()),
     ]).then(([catalogData, vehicleData]) => {
-      const catalog: ServiceCatalog[] = catalogData.services ?? [];
+      const catalog: ServiceCatalog[] = catalogData.catalog ?? [];
       setServices(catalog);
       setVehicles(vehicleData.vehicles ?? []);
 

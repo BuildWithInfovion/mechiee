@@ -3,12 +3,12 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Mechiee â€” Doorstep Bike Service",
+    default: "Mechiee - Doorstep Bike Service",
     template: "%s | Mechiee",
   },
   description:
-    "Book two-wheeler servicing at your doorstep. Find nearby garages, track your mechanic live, and pay securely.",
-  keywords: ["bike service", "two wheeler", "doorstep service", "mechanic", "India"],
+    "Book two-wheeler servicing at your doorstep. Verified mechanics, transparent pricing, pay after service. Available in 15+ cities across India.",
+  keywords: ["bike service", "two wheeler", "doorstep service", "mechanic", "India", "home service", "bike repair"],
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
     title: "Mechiee",
   },
   openGraph: {
-    title: "Mechiee â€” Doorstep Bike Service",
-    description: "Book two-wheeler servicing at your doorstep.",
+    title: "Mechiee - Doorstep Bike Service",
+    description: "Verified mechanics at your doorstep. Book in 2 minutes, pay after service.",
     type: "website",
   },
 };

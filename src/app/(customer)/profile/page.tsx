@@ -73,7 +73,7 @@ export default function ProfilePage() {
             <div className="flex gap-2">
               <button onClick={() => setEditing(false)} className="flex-1 py-2 rounded-xl border border-border text-muted-foreground text-sm">Cancel</button>
               <button onClick={handleSave} disabled={saving} className="flex-1 py-2 rounded-xl bg-primary text-white text-sm font-medium disabled:opacity-60">
-                {saving ? "Savingâ€¦" : "Save"}
+                {saving ? "Saving…" : "Save"}
               </button>
             </div>
           </div>
@@ -95,7 +95,7 @@ export default function ProfilePage() {
         <div className="grid grid-cols-3 gap-3">
           <div className="glass-card p-3 text-center"><p className="text-xl font-bold text-foreground">{bookingCount}</p><p className="text-xs text-muted-foreground">Bookings</p></div>
           <div className="glass-card p-3 text-center"><p className="text-xl font-bold text-foreground">{vehicleCount}</p><p className="text-xs text-muted-foreground">Vehicles</p></div>
-          <div className="glass-card p-3 text-center"><p className="text-xl font-bold text-foreground">â€”</p><p className="text-xs text-muted-foreground">Reviews</p></div>
+          <div className="glass-card p-3 text-center"><p className="text-xl font-bold text-foreground">{"—"}</p><p className="text-xs text-muted-foreground">Reviews</p></div>
         </div>
       </div>
 

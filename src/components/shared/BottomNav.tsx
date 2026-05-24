@@ -17,7 +17,7 @@ export function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-t border-border safe-bottom">
-      <div className="flex items-center justify-around max-w-screen-sm mx-auto">
+      <div className="flex items-end justify-around max-w-screen-sm mx-auto pb-2">
         {navItems.map(({ href, icon: Icon, label, primary }) => {
           const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
           return (
@@ -30,7 +30,7 @@ export function BottomNav() {
               )}
             >
               {primary ? (
-                <span className="absolute -top-5 flex items-center justify-center w-12 h-12 rounded-full bg-primary shadow-lg shadow-primary/30">
+                <span className="absolute -top-7 flex items-center justify-center w-[52px] h-[52px] rounded-full bg-primary shadow-lg shadow-primary/40 border-4 border-background">
                   <Icon className="w-5 h-5 text-white" />
                 </span>
               ) : (
