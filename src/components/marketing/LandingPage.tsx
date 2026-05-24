@@ -6,7 +6,8 @@ import {
   Bike, Battery, Droplets, Settings, Zap, CheckCircle,
   Menu, X, Phone, MessageCircle, ArrowRight, IndianRupee,
   Building2, TrendingUp, Users, BadgeCheck, ThumbsUp, Award,
-  Headphones, CalendarCheck, Search,
+  Headphones, CalendarCheck, Search, ChevronDown,
+  Smartphone, LayoutDashboard, ShieldCheck,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -136,9 +137,9 @@ export function LandingPage() {
           </nav>
 
           <div className="hidden md:flex items-center gap-3">
-            <a href="tel:+919876543210" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground border border-border rounded-lg px-3 py-2 transition-colors">
-              <Phone className="w-3.5 h-3.5" /> Call Now
-            </a>
+            <Link href="/garage/login" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground border border-border rounded-lg px-3 py-2 transition-colors">
+              <LayoutDashboard className="w-3.5 h-3.5" /> Garage Portal
+            </Link>
             <Link href="/login" className="text-sm bg-primary text-white px-5 py-2 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
               Book Service
             </Link>
@@ -162,9 +163,9 @@ export function LandingPage() {
               </Link>
             ))}
             <div className="flex gap-2 pt-2">
-              <a href="tel:+919876543210" className="flex-1 flex items-center justify-center gap-1.5 text-sm border border-border rounded-lg py-2.5">
-                <Phone className="w-4 h-4" /> Call
-              </a>
+              <Link href="/garage/login" className="flex-1 flex items-center justify-center gap-1.5 text-sm border border-border rounded-lg py-2.5">
+                <LayoutDashboard className="w-4 h-4" /> Garage Portal
+              </Link>
               <Link href="/login" className="flex-1 flex items-center justify-center bg-primary text-white text-sm rounded-lg py-2.5 font-semibold">
                 Book Now
               </Link>
@@ -448,9 +449,9 @@ export function LandingPage() {
                 <Link href="/garage/register" className="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
                   <Building2 className="w-4 h-4" /> Register Your Garage — Free
                 </Link>
-                <a href="tel:+919876543210" className="inline-flex items-center justify-center gap-2 border border-border text-foreground px-6 py-3 rounded-lg font-medium hover:bg-secondary transition-colors">
-                  <Phone className="w-4 h-4" /> Speak to Our Team
-                </a>
+                <Link href="/garage/login" className="inline-flex items-center justify-center gap-2 border border-border text-foreground px-6 py-3 rounded-lg font-medium hover:bg-secondary transition-colors">
+                  <LayoutDashboard className="w-4 h-4" /> Existing Garages — Login
+                </Link>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">

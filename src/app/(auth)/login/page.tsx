@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Phone } from "lucide-react";
+import { ArrowRight, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -92,15 +93,15 @@ export default function LoginPage() {
         {/* Divider */}
         <div className="flex items-center gap-3">
           <div className="flex-1 h-px bg-border" />
-          <span className="text-xs text-muted-foreground">Are you a garage?</span>
+          <span className="text-xs text-muted-foreground">Are you a garage owner?</span>
           <div className="flex-1 h-px bg-border" />
         </div>
 
         <Button variant="outline" className="w-full" asChild>
-          <a href="/garage/register">
-            <Phone className="w-4 h-4" />
-            Register your garage
-          </a>
+          <Link href="/garage/login">
+            <Wrench className="w-4 h-4" />
+            Garage Portal Login
+          </Link>
         </Button>
 
         <p className="text-center text-xs text-muted-foreground">

@@ -11,6 +11,7 @@ function VerifyForm() {
   const router = useRouter();
   const params = useSearchParams();
   const phone = params.get("phone") ?? "";
+  const from = params.get("from") ?? "";
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
   const [error, setError] = useState(false);
@@ -22,7 +23,7 @@ function VerifyForm() {
       const res = await fetch("/api/auth/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, otp }),
+        body: JSON.stringify({ phone, otp, from }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Invalid OTP");
