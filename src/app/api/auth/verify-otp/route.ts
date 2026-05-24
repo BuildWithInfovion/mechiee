@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
           getAll() {
             return req.cookies.getAll();
           },
-          setAll(cookiesToSet) {
+          setAll(cookiesToSet: { name: string; value: string; options?: CookieOptions }[]) {
             cookiesToSet.forEach(({ name, value, options }) => {
               pendingCookies.push({ name, value, options: options ?? {} });
             });
