@@ -6,7 +6,6 @@ import { User, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createClient } from "@/lib/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
 export default function OnboardPage() {
@@ -22,15 +21,13 @@ export default function OnboardPage() {
     }
     setLoading(true);
     try {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
-
-      const { error } = await supabase
-        .from("users")
-        .update({ name: name.trim() })
-        .eq("id", user.id);
-      if (error) throw error;
+      const res = await fetch("/api/auth/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed to save");
 
       router.push("/");
     } catch (err) {

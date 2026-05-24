@@ -2,12 +2,13 @@
 import { LandingPage } from "@/components/marketing/LandingPage";
 
 export default async function RootPage() {
-  const { createClient } = await import("@/lib/supabase/server");
+  const { createClient, createAdminClient } = await import("@/lib/supabase/server");
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (user) {
-    const { data: profile } = await supabase
+    const admin = await createAdminClient();
+    const { data: profile } = await admin
       .from("users")
       .select("role, name")
       .eq("id", user.id)

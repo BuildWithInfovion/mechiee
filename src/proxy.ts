@@ -53,48 +53,23 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  // Use the user_role cookie for all role-based redirects (set at login, no DB call needed)
+  const role = request.cookies.get("user_role")?.value ?? "customer";
+
   const REGISTER_PATHS = ["/garage/register", "/onboard"];
   if (user && isPublic && !REGISTER_PATHS.some((p) => path.startsWith(p))) {
-    // Use cookie for fast redirect; fall back to DB if cookie is missing
-    const roleCookie = request.cookies.get("user_role")?.value;
-    if (roleCookie && ROLE_REDIRECTS[roleCookie]) {
-      return NextResponse.redirect(
-        new URL(ROLE_REDIRECTS[roleCookie], request.url)
-      );
-    }
-    const { data: profile } = await supabase
-      .from("users")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-
-    if (profile?.role) {
-      return NextResponse.redirect(
-        new URL(ROLE_REDIRECTS[profile.role] ?? "/home", request.url)
-      );
-    }
+    const dest = ROLE_REDIRECTS[role] ?? "/home";
+    return NextResponse.redirect(new URL(dest, request.url));
   }
 
-  if (user && path.startsWith("/garage/") && path !== "/garage/register") {
-    const { data: profile } = await supabase
-      .from("users")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-
-    if (profile?.role === "customer") {
+  if (user && path.startsWith("/garage/") && !path.startsWith("/garage/register")) {
+    if (role === "customer") {
       return NextResponse.redirect(new URL("/home", request.url));
     }
   }
 
   if (user && path.startsWith("/admin/")) {
-    const { data: profile } = await supabase
-      .from("users")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-
-    if (profile?.role !== "admin") {
+    if (role !== "admin") {
       return NextResponse.redirect(new URL("/home", request.url));
     }
   }
