@@ -14,6 +14,11 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next({ request });
   }
 
+  // API routes handle their own auth — never redirect them
+  if (request.nextUrl.pathname.startsWith("/api/")) {
+    return NextResponse.next({ request });
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
