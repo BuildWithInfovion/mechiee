@@ -421,7 +421,7 @@ export function LandingPage() {
           : "bg-transparent"}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[68px] flex items-center justify-between gap-6">
           <Link href="/" className="flex-shrink-0">
-            <img src="/logo.png" alt="Mechiee" className="h-10 w-auto"
+            <img src="/logo.png" alt="Mechiee" className="h-12 w-auto"
               style={{ filter: "brightness(0) invert(1)", opacity: 0.92 }} />
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
@@ -466,17 +466,21 @@ export function LandingPage() {
       </header>
 
       {/* ── HERO ─────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[92vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[100svh] lg:min-h-[92vh] flex items-center overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0 bg-[#07070F]" />
+        {/* Violet studio glow — centered on mobile, shifted right on desktop */}
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 65% at 62% 42%, rgba(109,40,217,0.22) 0%, transparent 65%)" }} />
+          style={{ background: "radial-gradient(ellipse 120% 60% at 50% 35%, rgba(109,40,217,0.20) 0%, transparent 60%)" }} />
+        <div className="absolute inset-0 pointer-events-none lg:hidden"
+          style={{ background: "radial-gradient(ellipse 90% 45% at 50% 75%, rgba(109,40,217,0.12) 0%, transparent 60%)" }} />
+        {/* Warm amber accent — below speedometer */}
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 45% 40% at 78% 80%, rgba(251,146,60,0.07) 0%, transparent 55%)" }} />
+          style={{ background: "radial-gradient(ellipse 50% 35% at 50% 90%, rgba(251,146,60,0.06) 0%, transparent 55%)" }} />
         <div className="absolute inset-0 pointer-events-none opacity-[0.018]"
           style={{ backgroundImage: "radial-gradient(#fff 1px,transparent 1px)", backgroundSize: "44px 44px" }} />
         {/* Perspective floor grid */}
-        <div className="absolute bottom-0 left-0 right-0 h-44 pointer-events-none overflow-hidden">
+        <div className="absolute bottom-0 left-0 right-0 h-56 lg:h-44 pointer-events-none overflow-hidden">
           <div className="w-full h-full" style={{
             backgroundImage: "linear-gradient(rgba(124,58,237,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.08) 1px,transparent 1px)",
             backgroundSize: "52px 52px",
@@ -486,122 +490,112 @@ export function LandingPage() {
         </div>
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
-        {/* Large background tire rings */}
-        <div className="absolute right-0 top-1/2 pointer-events-none hidden lg:block"
-          style={{ transform: "translateY(-50%)", width: 780, height: 780 }}>
-          <div className="absolute inset-0 rounded-full"
-            style={{ border: "72px solid rgba(13,13,30,0.95)" }} />
-          <div className="absolute rounded-full"
-            style={{ inset: -1, border: "2px solid rgba(124,58,237,0.12)" }} />
-          <div className="absolute rounded-full"
-            style={{ inset: 88, border: "4px solid rgba(124,58,237,0.18)" }} />
-          <div className="absolute rounded-full"
-            style={{ inset: 100, border: "1.5px solid rgba(100,50,200,0.10)" }} />
-          {[0,22.5,45,67.5,90,112.5,135,157.5].map((a) => (
-            <div key={a} className="absolute"
-              style={{ width:"100%", height:2, backgroundColor:"rgba(60,60,100,0.12)",
-                top:"50%", left:0, transform:`rotate(${a}deg)`, transformOrigin:"50% 50%" }} />
-          ))}
-          <div className="absolute rounded-full bg-[#07070F]"
-            style={{ width:240, height:240, top:"50%", left:"50%", transform:"translate(-50%,-50%)" }} />
-          <div className="absolute rounded-full"
-            style={{ width:240, height:240, top:"50%", left:"50%", transform:"translate(-50%,-50%)",
-              border:"2px solid rgba(124,58,237,0.18)" }} />
-        </div>
 
         {/* Content */}
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
-          <div className="grid lg:grid-cols-[1fr_480px] gap-12 items-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-20 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_480px] gap-6 lg:gap-12 items-center">
 
-            {/* LEFT: Copy with entrance animation */}
-            <div className="max-w-xl">
+            {/* TEXT BLOCK */}
+            <div className="w-full">
               {/* Badge */}
-              <div style={slideIn(0)} className="mb-9">
-                <div className="inline-flex items-center gap-2.5 bg-white/[0.04] border border-white/[0.09] text-xs text-white/65 px-4 py-2 rounded-full backdrop-blur-sm">
-                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+              <div style={slideIn(0)} className="mb-6 lg:mb-9">
+                <div className="inline-flex items-center gap-2 bg-white/[0.04] border border-white/[0.09] text-xs text-white/65 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm">
+                  <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-emerald-400 rounded-full animate-pulse" />
                   Available Now &middot; 15+ Cities &middot; 10,000+ Services Completed
                 </div>
               </div>
 
-              {/* Headline — each line clips and slides up */}
-              <h1 className="text-5xl md:text-6xl xl:text-[4.75rem] font-extrabold leading-[1.04] tracking-tight mb-6">
+              {/* Headline */}
+              <h1 className="text-[2.6rem] leading-[1.05] sm:text-5xl md:text-6xl xl:text-[4.75rem] font-extrabold tracking-tight mb-5 lg:mb-6">
                 <span className="block overflow-hidden">
-                  <span style={slideIn(0.1)}>Expert Bike</span>
+                  <span style={slideIn(0.08)}>Expert Bike</span>
                 </span>
                 <span className="block overflow-hidden">
-                  <span style={slideIn(0.22)}>Servicing,</span>
+                  <span style={slideIn(0.2)}>Servicing,</span>
                 </span>
                 <span className="block overflow-hidden">
                   <span className="bg-gradient-to-r from-violet-400 via-purple-300 to-fuchsia-400 bg-clip-text text-transparent"
-                    style={slideIn(0.36)}>
+                    style={slideIn(0.33)}>
                     At Your Doorstep.
                   </span>
                 </span>
               </h1>
 
               {/* Subtext */}
-              <p className="text-white/52 text-xl leading-relaxed mb-10 max-w-md"
+              <p className="text-white/52 text-base sm:text-lg lg:text-xl leading-relaxed mb-7 lg:mb-10 max-w-md"
                 style={{
                   opacity: mounted ? 1 : 0, transform: mounted ? "none" : "translateY(20px)",
-                  transition: "opacity 0.8s ease 0.55s, transform 0.8s ease 0.55s",
+                  transition: "opacity 0.8s ease 0.5s, transform 0.8s ease 0.5s",
                 }}>
-                Verified mechanics dispatched to your home or office. Transparent pricing. Pay only after the job is done — guaranteed.
+                Verified mechanics at your home or office. Transparent pricing. Pay only after the job is done.
               </p>
 
               {/* CTAs */}
-              <div className="flex flex-col sm:flex-row gap-4 mb-14"
+              <div className="flex flex-col sm:flex-row gap-3 mb-8 lg:mb-14"
                 style={{
                   opacity: mounted ? 1 : 0, transform: mounted ? "none" : "translateY(20px)",
-                  transition: "opacity 0.8s ease 0.70s, transform 0.8s ease 0.70s",
+                  transition: "opacity 0.8s ease 0.65s, transform 0.8s ease 0.65s",
                 }}>
                 <Link href="/login"
-                  className="group flex items-center justify-center gap-2.5 bg-primary hover:bg-violet-500 text-white px-8 py-4 rounded-xl font-bold text-base transition-all shadow-2xl shadow-primary/30 hover:shadow-primary/55 hover:-translate-y-0.5">
+                  className="group flex items-center justify-center gap-2.5 bg-primary hover:bg-violet-500 text-white px-7 py-3.5 sm:px-8 sm:py-4 rounded-xl font-bold text-sm sm:text-base transition-all shadow-2xl shadow-primary/30 hover:shadow-primary/55 hover:-translate-y-0.5">
                   Book a Service
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <a href="tel:+919876543210"
-                  className="flex items-center justify-center gap-2.5 border border-white/12 hover:border-white/28 hover:bg-white/[0.04] text-white/68 hover:text-white px-8 py-4 rounded-xl font-medium text-base transition-all">
+                  className="flex items-center justify-center gap-2 border border-white/12 hover:border-white/28 hover:bg-white/[0.04] text-white/68 hover:text-white px-7 py-3.5 sm:px-8 sm:py-4 rounded-xl font-medium text-sm sm:text-base transition-all">
                   <Phone className="w-4 h-4" /> +91 98765 43210
                 </a>
               </div>
 
-              {/* Stats */}
-              <div className="flex items-stretch divide-x divide-white/10"
-                style={{
-                  opacity: mounted ? 1 : 0, transform: mounted ? "none" : "translateY(16px)",
-                  transition: "opacity 0.8s ease 0.85s, transform 0.8s ease 0.85s",
-                }}>
-                {[{v:"10,000+",l:"Services Done"},{v:"500+",l:"Verified Garages"},{v:"15+",l:"Cities"},{v:"4.8★",l:"Avg Rating"}].map((s) => (
-                  <div key={s.l} className="px-5 first:pl-0">
-                    <div className="text-2xl font-extrabold text-white">{s.v}</div>
-                    <div className="text-xs text-white/35 mt-0.5">{s.l}</div>
-                  </div>
-                ))}
+              {/* Stats — 2×2 card grid on mobile, divider row on desktop */}
+              <div style={{
+                opacity: mounted ? 1 : 0, transform: mounted ? "none" : "translateY(16px)",
+                transition: "opacity 0.8s ease 0.82s, transform 0.8s ease 0.82s",
+              }}>
+                {/* Mobile 2×2 grid */}
+                <div className="grid grid-cols-2 gap-2.5 sm:hidden">
+                  {[{v:"10,000+",l:"Services Done"},{v:"500+",l:"Verified Garages"},{v:"15+",l:"Cities"},{v:"4.8★",l:"Avg Rating"}].map((s) => (
+                    <div key={s.l} className="bg-white/[0.04] border border-white/[0.07] rounded-xl px-4 py-3">
+                      <div className="text-xl font-extrabold text-white">{s.v}</div>
+                      <div className="text-[11px] text-white/38 mt-0.5">{s.l}</div>
+                    </div>
+                  ))}
+                </div>
+                {/* Desktop divider row */}
+                <div className="hidden sm:flex items-stretch divide-x divide-white/10">
+                  {[{v:"10,000+",l:"Services Done"},{v:"500+",l:"Verified Garages"},{v:"15+",l:"Cities"},{v:"4.8★",l:"Avg Rating"}].map((s) => (
+                    <div key={s.l} className="px-5 first:pl-0">
+                      <div className="text-2xl font-extrabold text-white">{s.v}</div>
+                      <div className="text-xs text-white/35 mt-0.5">{s.l}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* RIGHT: Speedometer cluster */}
-            <div className="relative hidden lg:flex flex-col items-center justify-center">
+            {/* SPEEDOMETER — visible on all screens, centered on mobile */}
+            <div className="relative flex flex-col items-center justify-center mt-4 lg:mt-0">
+              {/* Glow behind gauge */}
               <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-primary/14 blur-3xl rounded-full" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-amber-500/6 blur-2xl rounded-full" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 sm:w-80 sm:h-80 bg-primary/14 blur-3xl rounded-full" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 sm:w-48 sm:h-48 bg-amber-500/6 blur-2xl rounded-full" />
               </div>
 
               {/* Scroll hint */}
-              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-20"
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-20"
                 style={{ opacity: mounted ? 1 : 0, transition: "opacity 1s ease 1.2s" }}>
-                <span className="text-white/28 text-[10px] font-medium tracking-widest uppercase">scroll to rev</span>
-                <div className="w-px h-6 bg-gradient-to-b from-white/20 to-transparent" />
+                <span className="text-white/25 text-[9px] sm:text-[10px] font-medium tracking-widest uppercase">scroll to rev</span>
+                <div className="w-px h-5 bg-gradient-to-b from-white/18 to-transparent" />
               </div>
 
-              <div className="relative z-10 w-full"
-                style={{ opacity: mounted ? 1 : 0, transform: mounted ? "none" : "scale(0.92)",
+              <div className="relative z-10 w-full max-w-[340px] sm:max-w-[400px] lg:max-w-full"
+                style={{ opacity: mounted ? 1 : 0, transform: mounted ? "none" : "scale(0.9)",
                   transition: "opacity 0.9s ease 0.4s, transform 0.9s cubic-bezier(0.22,1,0.36,1) 0.4s" }}>
                 <Speedometer svgRef={svgRef} />
               </div>
 
-              {/* Floating badges */}
-              <div className="absolute -left-14 top-10 z-20 bg-[#0C0C1E]/90 backdrop-blur-sm border border-white/[0.09] rounded-2xl px-4 py-3 shadow-2xl"
+              {/* Floating badges — desktop only */}
+              <div className="hidden lg:block absolute -left-14 top-10 z-20 bg-[#0C0C1E]/90 backdrop-blur-sm border border-white/[0.09] rounded-2xl px-4 py-3 shadow-2xl"
                 style={{ opacity: mounted ? 1 : 0, transition: "opacity 0.7s ease 0.9s" }}>
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 bg-emerald-500/15 border border-emerald-500/20 rounded-xl flex items-center justify-center">
@@ -614,7 +608,7 @@ export function LandingPage() {
                 </div>
               </div>
 
-              <div className="absolute -right-10 top-1/4 z-20 bg-[#0C0C1E]/90 backdrop-blur-sm border border-white/[0.09] rounded-2xl px-4 py-3 shadow-2xl"
+              <div className="hidden lg:block absolute -right-10 top-1/4 z-20 bg-[#0C0C1E]/90 backdrop-blur-sm border border-white/[0.09] rounded-2xl px-4 py-3 shadow-2xl"
                 style={{ opacity: mounted ? 1 : 0, transition: "opacity 0.7s ease 1.0s" }}>
                 <div className="flex items-center gap-1 mb-1">
                   {[1,2,3,4,5].map(s => <Star key={s} className="w-3 h-3 fill-amber-400 text-amber-400" />)}
@@ -623,7 +617,7 @@ export function LandingPage() {
                 <p className="text-white/40 text-[10px]">2,400+ reviews</p>
               </div>
 
-              <div className="absolute -right-8 bottom-20 z-20 bg-primary/10 border border-primary/20 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-2xl"
+              <div className="hidden lg:block absolute -right-8 bottom-20 z-20 bg-primary/10 border border-primary/20 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-2xl"
                 style={{ opacity: mounted ? 1 : 0, transition: "opacity 0.7s ease 1.1s" }}>
                 <div className="flex items-center gap-2">
                   <span className="relative flex h-2 w-2">
