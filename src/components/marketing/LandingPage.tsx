@@ -16,8 +16,11 @@ import { useState, useEffect, useRef, useCallback } from "react";
 const CX = 210, CY = 210, R = 158;
 const START = 215, SWEEP = 290;
 const MAX_KMH = 160;
-const TARGET_KMH = 78;
-const arcLen = 2 * Math.PI * R * (SWEEP / 360); // ≈ 863
+const TARGET_KMH  = 150;                                    // revs into redline
+const REDLINE_KMH = 120;                                    // redline starts here
+const REDLINE_A   = START + (REDLINE_KMH / MAX_KMH) * SWEEP; // angle where red begins
+const REDLINE_SW  = ((MAX_KMH - REDLINE_KMH) / MAX_KMH) * SWEEP; // red arc sweep
+const arcLen = 2 * Math.PI * R * (SWEEP / 360);            // ≈ 863
 
 function toXY(deg: number, r: number, ox = CX, oy = CY) {
   const rad = (deg - 90) * Math.PI / 180;
@@ -30,14 +33,15 @@ function arcD(r: number, a1: number, sweep: number, ox = CX, oy = CY) {
 }
 
 const TICKS = Array.from({ length: 17 }, (_, i) => {
-  const deg   = START + (i / 16) * SWEEP;
-  const major = i % 2 === 0;
+  const deg     = START + (i / 16) * SWEEP;
+  const major   = i % 2 === 0;
+  const kmh     = Math.round((i / 16) * MAX_KMH);
+  const redline = kmh >= REDLINE_KMH;
   return {
     outer: toXY(deg, R),
     inner: toXY(deg, R - (major ? 22 : 13)),
     lp:    toXY(deg, R - 42),
-    kmh:   Math.round((i / 16) * MAX_KMH),
-    major, label: i % 4 === 0,
+    kmh, major, label: i % 4 === 0, redline,
   };
 });
 const NEEDLE_START = toXY(START, R - 16); // needle tip at 0 kmh
@@ -209,8 +213,9 @@ function Speedometer({ svgRef }: { svgRef: React.RefObject<SVGSVGElement> }) {
           x1={toXY(START, R).x}         y1={toXY(START, R).y}
           x2={toXY(START + SWEEP, R).x} y2={toXY(START + SWEEP, R).y}>
           <stop offset="0%"   stopColor="#7C3AED" />
-          <stop offset="50%"  stopColor="#A78BFA" />
-          <stop offset="100%" stopColor="#EC4899" />
+          <stop offset="55%"  stopColor="#A78BFA" />
+          <stop offset="78%"  stopColor="#F59E0B" />
+          <stop offset="100%" stopColor="#EF4444" />
         </linearGradient>
         <radialGradient id="dialBg" cx="50%" cy="50%" r="50%">
           <stop offset="0%"   stopColor="#0F0F22" />
@@ -236,6 +241,9 @@ function Speedometer({ svgRef }: { svgRef: React.RefObject<SVGSVGElement> }) {
       <path d={arcD(R, START, SWEEP)} stroke="#0D0D22" strokeWidth="28" strokeLinecap="round" fill="none" />
       <path d={arcD(R, START, SWEEP)} stroke="#1A1A36" strokeWidth="10" strokeLinecap="round" fill="none" />
 
+      {/* ── Redline zone arc ── */}
+      <path d={arcD(R, REDLINE_A, REDLINE_SW)} stroke="rgba(239,68,68,0.22)" strokeWidth="10" strokeLinecap="round" fill="none" />
+
       {/* ── Active arc — scroll-driven via JS (starts fully hidden) ── */}
       <path
         id="gauge-arc"
@@ -253,11 +261,11 @@ function Speedometer({ svgRef }: { svgRef: React.RefObject<SVGSVGElement> }) {
       {TICKS.map((t, i) => (
         <g key={i}>
           <line x1={t.outer.x} y1={t.outer.y} x2={t.inner.x} y2={t.inner.y}
-            stroke={t.major ? "#3A3A68" : "#1E1E40"}
+            stroke={t.redline ? (t.major ? "#EF4444" : "#F97316") : (t.major ? "#3A3A68" : "#1E1E40")}
             strokeWidth={t.major ? 2.5 : 1.5} strokeLinecap="round" />
           {t.label && (
             <text x={t.lp.x} y={t.lp.y} textAnchor="middle" dominantBaseline="middle"
-              fill="rgba(255,255,255,0.55)" fontSize="12" fontWeight="600"
+              fill={t.redline ? "rgba(239,68,68,0.75)" : "rgba(255,255,255,0.55)"} fontSize="12" fontWeight="600"
               fontFamily="Inter,system-ui,sans-serif">{t.kmh}</text>
           )}
         </g>
@@ -290,9 +298,8 @@ function Speedometer({ svgRef }: { svgRef: React.RefObject<SVGSVGElement> }) {
       <text x={CX} y={CY + 55} textAnchor="middle"
         fill="rgba(255,255,255,0.38)" fontSize="12" letterSpacing="3"
         fontFamily="Inter,system-ui,sans-serif">km/h</text>
-      <text x={CX} y={CY - 50} textAnchor="middle"
-        fill="rgba(167,139,250,0.48)" fontSize="9" letterSpacing="5" fontWeight="700"
-        fontFamily="Inter,system-ui,sans-serif">MECHIEE</text>
+      <image href="/logo.png" x={CX - 35} y={CY - 73} width="70" height="26"
+        style={{ filter: "brightness(0) invert(1)", opacity: 0.42 }} />
 
       {/* ── Mini gauges (static, decorative) ── */}
       <MiniGauge x={355} y={342} r={44} color="#7C3AED" label="RPM"  value="3.2k" fill={0.52} />
@@ -359,7 +366,7 @@ export function LandingPage() {
   /* Scroll → target speed mapping */
   const onScroll = useCallback(() => {
     // Hero is ~92vh tall. Map scrollY 0 → 55%·vh to speed 0 → TARGET_KMH.
-    const progress = Math.max(0, Math.min(1, window.scrollY / (window.innerHeight * 0.55)));
+    const progress = Math.max(0, Math.min(1, window.scrollY / (window.innerHeight * 0.60)));
     targetSpeed.current = progress * TARGET_KMH;
 
     setScrolled(window.scrollY > 40);

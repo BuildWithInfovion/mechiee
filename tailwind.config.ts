@@ -94,7 +94,7 @@ const config: Config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
-        "marquee": "marquee 35s linear infinite",
+        "marquee": "marquee 18s linear infinite",
         "float-up": "float-up 4s ease-in-out infinite",
         "spin-slow": "spin-slow 20s linear infinite",
       },
