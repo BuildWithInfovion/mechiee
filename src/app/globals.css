@@ -163,3 +163,63 @@
     padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
 }
+
+/* ═══════════════════════════════════════════
+   AUTOMOTIVE ANIMATION KEYFRAMES
+═══════════════════════════════════════════ */
+
+@keyframes wheel-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes spark-fly {
+  0%   { transform: translate(0, 0) scale(1);   opacity: 0.95; }
+  100% { transform: translate(var(--spark-x, 40px), var(--spark-y, -50px)) scale(0.05); opacity: 0; }
+}
+
+@keyframes smoke-rise {
+  0%   { transform: translate(0, 0) scale(0.5);  opacity: 0.45; filter: blur(2px); }
+  100% { transform: translate(var(--sx, 0px), -55px) scale(2.2); opacity: 0; filter: blur(8px); }
+}
+
+@keyframes headlight-glow {
+  0%, 100% { opacity: 0.45; }
+  50%       { opacity: 1;    }
+}
+
+@keyframes headlight-beam {
+  0%, 100% { opacity: 0.05; }
+  50%       { opacity: 0.14; }
+}
+
+@keyframes tool-bob {
+  0%, 100% { transform: translateY(0px)   rotate(var(--r0, -15deg)); }
+  50%       { transform: translateY(-20px) rotate(var(--r1,  10deg)); }
+}
+
+@keyframes gear-ccw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+@keyframes oil-drip {
+  0%   { transform: translateY(0)    scaleX(1);   opacity: 0.8; }
+  65%  { transform: translateY(0)    scaleX(1);   opacity: 0.7; }
+  100% { transform: translateY(30px) scaleX(0.5); opacity: 0;   }
+}
+
+@keyframes beacon-ring {
+  0%   { transform: scale(1);   opacity: 0.18; }
+  100% { transform: scale(2.4); opacity: 0;    }
+}
+
+@keyframes floor-breathe {
+  0%, 100% { opacity: 0.035; }
+  50%       { opacity: 0.07;  }
+}
+
+@keyframes work-light-sway {
+  0%, 100% { transform: scaleX(1)   scaleY(1);   opacity: 0.08; }
+  50%       { transform: scaleX(1.1) scaleY(0.95); opacity: 0.12; }
+}
