@@ -223,3 +223,34 @@
   0%, 100% { transform: scaleX(1)   scaleY(1);   opacity: 0.08; }
   50%       { transform: scaleX(1.1) scaleY(0.95); opacity: 0.12; }
 }
+
+@keyframes arc-fill {
+  0%   { stroke-dashoffset: 864; }
+  70%  { stroke-dashoffset: 420; }
+  85%  { stroke-dashoffset: 434; }
+  100% { stroke-dashoffset: 427; }
+}
+
+@keyframes needle-sweep {
+  0%   { transform: rotate(0deg);   }
+  70%  { transform: rotate(158deg); }
+  85%  { transform: rotate(137deg); }
+  100% { transform: rotate(146deg); }
+}
+
+@keyframes mini-needle {
+  0%   { transform: rotate(0deg);  }
+  80%  { transform: rotate(88deg); }
+  100% { transform: rotate(82deg); }
+}
+
+@keyframes mini-needle2 {
+  0%   { transform: rotate(0deg);  }
+  80%  { transform: rotate(66deg); }
+  100% { transform: rotate(60deg); }
+}
+
+@keyframes tire-spin-bg {
+  from { transform: translateY(-50%) rotate(0deg);   }
+  to   { transform: translateY(-50%) rotate(360deg); }
+}
