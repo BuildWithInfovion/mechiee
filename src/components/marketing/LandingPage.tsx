@@ -406,8 +406,8 @@ function Speedometer({ svgRef }: { svgRef: React.RefObject<SVGSVGElement> }) {
       <text x={CX} y={CY + 55} textAnchor="middle"
         fill="rgba(255,255,255,0.38)" fontSize="12" letterSpacing="3"
         fontFamily="Inter,system-ui,sans-serif">km/h</text>
-      <image href="/logo.png" x={CX - 35} y={CY - 73} width="70" height="26"
-        style={{ filter: "brightness(0) invert(1)", opacity: 0.42 }} />
+      <image href="/logo.png" x={CX - 52} y={CY - 82} width="104" height="38"
+        style={{ filter: "brightness(0) invert(1)", opacity: 0.52 }} />
 
       {/* ── Mini gauges (static, decorative) ── */}
       <MiniGauge x={355} y={342} r={44} color="#7C3AED" label="RPM"  value="3.2k" fill={0.52} />
