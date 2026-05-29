@@ -158,12 +158,30 @@ function ShimmerCard({ delay = 0, className = "", children }: {
    DATA
 ───────────────────────────────────────────────────────────────── */
 const SERVICES = [
-  { icon: Settings, label: "General Service",   desc: "Full tune-up, oil change, chain lube, brake & air filter check",   price: "₹499", priceNum: 499, time: "2–3 hrs",  popular: true,  grad: "from-violet-500/20", text: "text-violet-400", border: "border-violet-500/25" },
-  { icon: Droplets, label: "Oil Change",         desc: "Drain old oil, replace filter, fill fresh engine oil of your grade",  price: "₹299", priceNum: 299, time: "30 min",  popular: false, grad: "from-amber-500/20",  text: "text-amber-400",  border: "border-amber-500/25"  },
-  { icon: Bike,     label: "Tyre Service",        desc: "Puncture repair, pressure check, replacement (MRF/CEAT/Apollo)",    price: "₹149", priceNum: 149, time: "30–45 m", popular: false, grad: "from-sky-500/20",    text: "text-sky-400",    border: "border-sky-500/25"    },
-  { icon: Battery,  label: "Battery Service",     desc: "Testing, charging, warranty-backed battery replacement",            price: "₹999", priceNum: 999, time: "30 min",  popular: false, grad: "from-emerald-500/20",text: "text-emerald-400",border: "border-emerald-500/25"},
-  { icon: Zap,      label: "Electrical Repair",   desc: "Wiring, headlight, indicators, horn, self-start motor",            price: "₹199", priceNum: 199, time: "1–2 hrs", popular: false, grad: "from-yellow-500/20", text: "text-yellow-400", border: "border-yellow-500/25" },
-  { icon: Droplets, label: "Bike Wash & Polish",  desc: "Pressure wash, engine degrease, chain clean, body polish",         price: "₹199", priceNum: 199, time: "45 min",  popular: false, grad: "from-cyan-500/20",   text: "text-cyan-400",   border: "border-cyan-500/25"   },
+  {
+    icon: Zap,
+    label: "Emergency Services",
+    desc: "Quick help when you need it most.",
+    items: ["Bike Breakdown Assistance", "Chain Break Fix", "Puncture Repair", "Battery Jumpstart / Replacement", "Tyre Replacement", "Minor On-Spot Repairs", "Emergency Inspection Services", "Others (Custom Requests)"],
+    price: "Starting ₹199/Service",
+    grad: "from-amber-500/20", text: "text-amber-400", border: "border-amber-500/25",
+  },
+  {
+    icon: Settings,
+    label: "Doorstep Services",
+    desc: "Quality service at your home.",
+    items: ["General Servicing", "Oil & Filter Change", "Brake Services", "Chain & Sprocket Check", "Air Filter Cleaning", "Electrical Checkup", "Tappet Adjustment", "Battery Health Check", "Clutch & Cable Adjustment", "Bike Wash & Polish", "Others (Custom Requests)"],
+    price: "Starting ₹299",
+    grad: "from-violet-500/20", text: "text-violet-400", border: "border-violet-500/25",
+  },
+  {
+    icon: Building2,
+    label: "Garage Experience",
+    desc: "Expert repairs with advanced tools.",
+    items: ["Advanced Diagnostics", "Engine Overhaul", "Suspension Repair", "Accidental Repairs", "Complete Bike Restoration", "Paint Touch-Up / Coating", "Parts Replacement", "Emission Check (PUC)", "Annual Maintenance Contracts (AMC)", "Others (Custom Requests)"],
+    price: "Starting ₹399",
+    grad: "from-sky-500/20", text: "text-sky-400", border: "border-sky-500/25",
+  },
 ];
 const TRUST_STRIP = [
   { icon: BadgeCheck,    text: "Verified Mechanics"   },
@@ -176,22 +194,64 @@ const TRUST_STRIP = [
   { icon: Bike,          text: "500+ Partner Garages"  },
 ];
 const TRUST_POINTS = [
-  { icon: BadgeCheck,    title: "Verified Mechanics",   desc: "Background-checked, trained & certified before onboarding.",        color: "text-violet-400",  bg: "bg-violet-500/10",  border: "border-violet-500/20"  },
-  { icon: Shield,        title: "Transparent Pricing",  desc: "Price shown upfront. What you see is what you pay — always.",       color: "text-sky-400",     bg: "bg-sky-500/10",     border: "border-sky-500/20"     },
-  { icon: Award,         title: "90-Day Warranty",      desc: "All services covered under a 90-day quality guarantee.",            color: "text-amber-400",   bg: "bg-amber-500/10",   border: "border-amber-500/20"   },
-  { icon: Headphones,    title: "24/7 Support",         desc: "Reach us via WhatsApp, phone or in-app chat, any time.",           color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
-  { icon: CalendarCheck, title: "Doorstep Service",     desc: "Mechanic comes to your home, office, or anywhere you choose.",     color: "text-pink-400",    bg: "bg-pink-500/10",    border: "border-pink-500/20"    },
-  { icon: ThumbsUp,      title: "Zero Advance Payment", desc: "Parts cost shown before replacement. You approve. Pay after job.", color: "text-cyan-400",    bg: "bg-cyan-500/10",    border: "border-cyan-500/20"    },
+  { icon: CalendarCheck, title: "Easy Booking",        desc: "Book services in just 3 clicks through our user-friendly mobile app.",          color: "text-violet-400",  bg: "bg-violet-500/10",  border: "border-violet-500/20"  },
+  { icon: MapPin,        title: "Real-time Tracking",  desc: "Track your mechanic's live location and get real-time updates.",                 color: "text-sky-400",     bg: "bg-sky-500/10",     border: "border-sky-500/20"     },
+  { icon: Clock,         title: "Quick Response",      desc: "Emergency services available 24/7 with average response time of 30 minutes.",    color: "text-amber-400",   bg: "bg-amber-500/10",   border: "border-amber-500/20"   },
+  { icon: BadgeCheck,    title: "Trusted Mechanics",   desc: "All mechanics are verified, trained, and background-checked professionals.",     color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
+  { icon: IndianRupee,   title: "Transparent Pricing", desc: "No hidden charges. Pay securely online with multiple payment options.",          color: "text-pink-400",    bg: "bg-pink-500/10",    border: "border-pink-500/20"    },
+  { icon: Award,         title: "Quality Guarantee",   desc: "100% satisfaction guarantee with warranty on all services.",                    color: "text-cyan-400",    bg: "bg-cyan-500/10",    border: "border-cyan-500/20"    },
 ];
 const TESTIMONIALS = [
-  { name: "Rahul Sharma", city: "Bengaluru", rating: 5, text: "Got my Activa serviced at home. Mechanic arrived on time and did a thorough job. Saved me a full day at the workshop.", bike: "Honda Activa 6G",  initials: "RS", bg: "bg-violet-700" },
-  { name: "Priya Menon",  city: "Hyderabad", rating: 5, text: "Battery replaced in 30 minutes outside my apartment. Mechanic even checked the wiring for free. Highly recommended.",  bike: "TVS Jupiter",      initials: "PM", bg: "bg-emerald-700"},
-  { name: "Karthik R",    city: "Chennai",   rating: 5, text: "Transparent pricing, zero hidden charges. They showed me every part before replacing. That level of honesty is rare.", bike: "RE Classic 350",  initials: "KR", bg: "bg-sky-700"    },
+  { name: "Amit Kale",        city: "Hinjewadi, Pune",     rating: 5, text: "Fast and reliable service. My bike was picked up and returned on time. Highly recommended!",            bike: "Doorstep Service",  initials: "AK", bg: "bg-violet-700"  },
+  { name: "Sneha Patil",      city: "Pimple Nilakh, Pune", rating: 5, text: "Loved the doorstep service! No hassle, and the team was very professional.",                          bike: "Doorstep Service",  initials: "SP", bg: "bg-emerald-700" },
+  { name: "Rahul Deshmukh",   city: "Baner, Pune",         rating: 5, text: "They fixed my bike's chain issue quickly. Impressive response time and good pricing.",                 bike: "Emergency Service", initials: "RD", bg: "bg-sky-700"     },
+  { name: "Neha Jagtap",      city: "Hinjewadi, Pune",     rating: 5, text: "The staff was very polite and experienced. Explained the repairs in detail.",                          bike: "Garage Service",    initials: "NJ", bg: "bg-amber-700"   },
+  { name: "Saurabh Kulkarni", city: "Wakad, Pune",         rating: 5, text: "Smooth experience overall. Booking and service were both easy and efficient.",                        bike: "Doorstep Service",  initials: "SK", bg: "bg-pink-700"    },
 ];
 const CITIES = [
-  "Bengaluru","Hyderabad","Chennai","Pune","Mumbai",
-  "Delhi NCR","Ahmedabad","Jaipur","Coimbatore","Kochi",
-  "Nagpur","Indore","Bhopal","Visakhapatnam","Mysuru",
+  "Hinjewadi", "Pimple Nilakh", "Baner", "Wakad", "Aundh",
+  "Kothrud", "Viman Nagar", "Hadapsar", "Koregaon Park", "Shivajinagar",
+  "Kharadi", "Magarpatta", "Wanowrie", "Bavdhan", "Pashan",
+  "Pimpri", "Chinchwad", "Akurdi", "Deccan", "Camp",
+];
+
+const PLANS = [
+  {
+    name: "Starter", price: "₹999", period: "/year",
+    features: [
+      { label: "Included Services", value: "1 General Servicing + Oil Change" },
+      { label: "Pickup / Drop",     value: "1 Free / year" },
+      { label: "Emergency Help",    value: "1 / year" },
+      { label: "Booking Priority",  value: "Standard" },
+      { label: "Support",           value: "Chat only" },
+    ],
+    cta: "Choose Starter", highlight: false,
+    color: "text-violet-400", border: "border-violet-500/25", bg: "bg-violet-500/10",
+  },
+  {
+    name: "Smart-Ride", price: "₹2,249", period: "/year",
+    features: [
+      { label: "Included Services", value: "4 Services (3 general + 1 emergency)" },
+      { label: "Pickup / Drop",     value: "2 Free / year" },
+      { label: "Emergency Help",    value: "1 / year" },
+      { label: "Booking Priority",  value: "1.2× priority queue" },
+      { label: "Support",           value: "Priority chat / call" },
+    ],
+    cta: "Choose Smart-Ride", highlight: true,
+    color: "text-emerald-400", border: "border-emerald-500/25", bg: "bg-emerald-500/10",
+  },
+  {
+    name: "Pro-Gear", price: "₹3,599", period: "/year",
+    features: [
+      { label: "Included Services", value: "2 Services (incl. oil changes) + 1 Emergency" },
+      { label: "Pickup / Drop",     value: "Unlimited" },
+      { label: "Emergency Help",    value: "1 / year" },
+      { label: "Booking Priority",  value: "2× priority + direct line" },
+      { label: "Support",           value: "Dedicated advisor" },
+    ],
+    cta: "Choose Pro-Gear", highlight: false,
+    color: "text-sky-400", border: "border-sky-500/25", bg: "bg-sky-500/10",
+  },
 ];
 
 /* ─────────────────────────────────────────────────────────────────
@@ -602,9 +662,9 @@ export function LandingPage() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-40" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
           </span>
-          Now live in 15+ cities — verified mechanics at your doorstep
+          Now live in Pune — verified mechanics at your doorstep
           <span className="hidden sm:inline text-white/35">·</span>
-          <a href="https://wa.me/919876543210"
+          <a href="https://wa.me/918149297982"
             className="hidden sm:inline text-white/70 hover:text-white underline underline-offset-2 transition-colors">
             Chat on WhatsApp →
           </a>
@@ -622,7 +682,7 @@ export function LandingPage() {
               style={{ filter: "brightness(0) invert(1)", opacity: 0.92 }} />
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-            {[["#services","Services"],["#how-it-works","How It Works"],["#why-us","Why Us"],["#for-garages","For Garages"],["#cities","Cities"]].map(([href, label]) => (
+            {[["#services","Services"],["#plans","Plans"],["#how-it-works","How It Works"],["#why-us","Why Us"],["#cities","Areas"]].map(([href, label]) => (
               <Link key={href} href={href} className="text-white/48 hover:text-white transition-colors">{label}</Link>
             ))}
           </nav>
@@ -644,7 +704,7 @@ export function LandingPage() {
 
         {menuOpen && (
           <div className="md:hidden bg-[#0C0C1A] border-t border-white/[0.07] px-4 pb-6 pt-3">
-            {[["#services","Services"],["#how-it-works","How It Works"],["#why-us","Why Us"],["#for-garages","For Garages"],["#cities","Cities"]].map(([href, label]) => (
+            {[["#services","Services"],["#plans","Plans"],["#how-it-works","How It Works"],["#why-us","Why Us"],["#cities","Areas"]].map(([href, label]) => (
               <Link key={href} href={href} onClick={() => setMenuOpen(false)}
                 className="flex items-center justify-between py-3.5 text-sm text-white/65 border-b border-white/[0.06] hover:text-white">
                 {label} <ArrowRight className="w-3.5 h-3.5 text-white/25" />
@@ -698,22 +758,22 @@ export function LandingPage() {
               <div style={slideIn(0)} className="mb-6 lg:mb-9">
                 <div className="inline-flex items-center gap-2 bg-white/[0.04] border border-white/[0.09] text-xs text-white/65 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm">
                   <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-emerald-400 rounded-full animate-pulse" />
-                  Available Now &middot; 15+ Cities &middot; 10,000+ Services Completed
+                  Available Now in Pune &middot; 4.9&#9733; Rated Service
                 </div>
               </div>
 
               {/* Headline */}
               <h1 className="text-[2.6rem] leading-[1.05] sm:text-5xl md:text-6xl xl:text-[4.75rem] font-extrabold tracking-tight mb-5 lg:mb-6">
                 <span className="block overflow-hidden">
-                  <span style={slideIn(0.08)}>Expert Bike</span>
+                  <span style={slideIn(0.08)}>Your Bike</span>
                 </span>
                 <span className="block overflow-hidden">
-                  <span style={slideIn(0.2)}>Servicing,</span>
+                  <span style={slideIn(0.2)}>Our</span>
                 </span>
                 <span className="block overflow-hidden">
                   <span className="bg-gradient-to-r from-violet-400 via-purple-300 to-fuchsia-400 bg-clip-text text-transparent"
                     style={slideIn(0.33)}>
-                    At Your Doorstep.
+                    Service.
                   </span>
                 </span>
               </h1>
@@ -724,7 +784,7 @@ export function LandingPage() {
                   opacity: mounted ? 1 : 0, transform: mounted ? "none" : "translateY(20px)",
                   transition: "opacity 0.8s ease 0.5s, transform 0.8s ease 0.5s",
                 }}>
-                Verified mechanics at your home or office. Transparent pricing. Pay only after the job is done.
+                Mechiee is a smart bike servicing platform offering instant, reliable, and transparent two-wheeler care — at your doorstep, in emergencies, or at trusted partner garages. Book, track, and relax — we&apos;ve got your ride covered.
               </p>
 
               {/* CTAs */}
@@ -738,9 +798,9 @@ export function LandingPage() {
                   Book a Service
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <a href="tel:+919876543210"
+                <a href="tel:+918149297982"
                   className="flex items-center justify-center gap-2 border border-white/12 hover:border-white/28 hover:bg-white/[0.04] text-white/68 hover:text-white px-7 py-3.5 sm:px-8 sm:py-4 rounded-xl font-medium text-sm sm:text-base transition-all">
-                  <Phone className="w-4 h-4" /> +91 98765 43210
+                  <Phone className="w-4 h-4" /> +91 81492 97982
                 </a>
               </div>
 
@@ -749,9 +809,9 @@ export function LandingPage() {
                 opacity: mounted ? 1 : 0, transform: mounted ? "none" : "translateY(16px)",
                 transition: "opacity 0.8s ease 0.82s, transform 0.8s ease 0.82s",
               }}>
-                {/* Mobile 2×2 grid */}
-                <div className="grid grid-cols-2 gap-2.5 sm:hidden">
-                  {[{v:"10,000+",l:"Services Done"},{v:"500+",l:"Verified Garages"},{v:"15+",l:"Cities"},{v:"4.8★",l:"Avg Rating"}].map((s) => (
+                {/* Mobile grid */}
+                <div className="grid grid-cols-3 gap-2.5 sm:hidden">
+                  {[{v:"100%",l:"Satisfaction"},{v:"24/7",l:"Emergency Service"},{v:"4.9★",l:"Average Rating"}].map((s) => (
                     <div key={s.l} className="bg-white/[0.04] border border-white/[0.07] rounded-xl px-4 py-3">
                       <div className="text-xl font-extrabold text-white">{s.v}</div>
                       <div className="text-[11px] text-white/38 mt-0.5">{s.l}</div>
@@ -760,7 +820,7 @@ export function LandingPage() {
                 </div>
                 {/* Desktop divider row */}
                 <div className="hidden sm:flex items-stretch divide-x divide-white/10">
-                  {[{v:"10,000+",l:"Services Done"},{v:"500+",l:"Verified Garages"},{v:"15+",l:"Cities"},{v:"4.8★",l:"Avg Rating"}].map((s) => (
+                  {[{v:"100%",l:"Satisfaction"},{v:"24/7",l:"Emergency Service"},{v:"4.9★",l:"Average Rating"}].map((s) => (
                     <div key={s.l} className="px-5 first:pl-0">
                       <div className="text-2xl font-extrabold text-white">{s.v}</div>
                       <div className="text-xs text-white/35 mt-0.5">{s.l}</div>
@@ -893,15 +953,16 @@ export function LandingPage() {
               <p className="text-white/46 text-lg">No calls. No confusion. Select, schedule, and relax.</p>
             </FadeIn>
           </div>
-          <div ref={stepsRef} className="grid md:grid-cols-4 gap-5">
+          <div ref={stepsRef} className="grid md:grid-cols-5 gap-5">
             {[
-              { step:"01", icon:Search,         title:"Choose Service",    desc:"Browse 20+ services with upfront pricing. No surprises.",            grad:"from-violet-500/15", border:"border-violet-500/20", ic:"text-violet-400",  ib:"bg-violet-500/15"  },
-              { step:"02", icon:CalendarCheck,   title:"Pick a Slot",       desc:"Same day or advance booking — any time that works for you.",          grad:"from-sky-500/15",    border:"border-sky-500/20",    ic:"text-sky-400",     ib:"bg-sky-500/15"     },
-              { step:"03", icon:Bike,            title:"Mechanic Arrives",  desc:"Verified mechanic at your location. Track them live in-app.",         grad:"from-amber-500/15",  border:"border-amber-500/20",  ic:"text-amber-400",   ib:"bg-amber-500/15"   },
-              { step:"04", icon:IndianRupee,     title:"Pay After",         desc:"Inspect the work. Pay via UPI, card, or cash. Zero advance.",          grad:"from-emerald-500/15",border:"border-emerald-500/20",ic:"text-emerald-400", ib:"bg-emerald-500/15" },
+              { step:"01", icon:Phone,          title:"Book Service",   desc:"Choose your service type and schedule a convenient time slot.",   grad:"from-violet-500/15", border:"border-violet-500/20", ic:"text-violet-400",  ib:"bg-violet-500/15"  },
+              { step:"02", icon:Search,         title:"Find Garage",    desc:"We match you with the best verified garage in your area.",        grad:"from-sky-500/15",    border:"border-sky-500/20",    ic:"text-sky-400",     ib:"bg-sky-500/15"     },
+              { step:"03", icon:CalendarCheck,  title:"Schedule",       desc:"Confirm your booking and get ready for professional service.",    grad:"from-amber-500/15",  border:"border-amber-500/20",  ic:"text-amber-400",   ib:"bg-amber-500/15"   },
+              { step:"04", icon:Settings,       title:"Service",        desc:"Expert mechanics service your bike with genuine parts.",          grad:"from-emerald-500/15",border:"border-emerald-500/20",ic:"text-emerald-400", ib:"bg-emerald-500/15" },
+              { step:"05", icon:Star,           title:"Review",         desc:"Rate your experience and help us improve our service.",           grad:"from-pink-500/15",   border:"border-pink-500/20",   ic:"text-pink-400",    ib:"bg-pink-500/15"    },
             ].map((step, i) => (
               <FadeIn key={step.step} delay={i * 0.1} className="relative group">
-                {i < 3 && (
+                {i < 4 && (
                   <div
                     className="hidden md:block absolute top-10 left-[calc(100%-0.5rem)] h-px z-0 origin-left"
                     style={{
@@ -933,49 +994,40 @@ export function LandingPage() {
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse 55% 55% at 5% 55%, rgba(59,130,246,0.04) 0%, transparent 55%)" }} />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
-            <div>
-              <FadeIn><p className="text-primary text-xs font-bold uppercase tracking-[0.2em] mb-3">Services & Pricing</p></FadeIn>
-              <h2 className="text-4xl md:text-5xl font-extrabold text-white leading-tight">
-                <WordReveal>Transparent prices,</WordReveal>
-                <br />
-                <span className="text-white/30"><WordReveal baseDelay={0.25}>zero surprises.</WordReveal></span>
-              </h2>
-            </div>
-            <FadeIn delay={0.2}>
-              <p className="text-white/38 max-w-xs text-sm leading-relaxed md:text-right">
-                All-inclusive: labour + consumables. Parts cost shown before replacement — you approve, always.
-              </p>
-            </FadeIn>
+          <div className="max-w-2xl mb-14">
+            <FadeIn><p className="text-primary text-xs font-bold uppercase tracking-[0.2em] mb-3">Services & Pricing</p></FadeIn>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-white leading-tight">
+              <WordReveal>Services We Offer</WordReveal>
+              <br />
+              <span className="text-white/30"><WordReveal baseDelay={0.25}>Three convenient ways to get your bike serviced.</WordReveal></span>
+            </h2>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-3 gap-5">
             {SERVICES.map((svc, i) => (
-              <ShimmerCard key={svc.label} delay={i * 0.07}
-                className="relative group bg-white/[0.03] hover:bg-white/[0.055] border border-white/[0.07] hover:border-white/[0.13] rounded-2xl p-6 transition-all hover:-translate-y-1.5">
-                {svc.popular && (
-                  <div className="absolute -top-3 left-5">
-                    <span className="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg shadow-primary/40">Most Popular</span>
-                  </div>
-                )}
-                <div className="flex items-start justify-between mb-5">
-                  <div className={`w-12 h-12 bg-gradient-to-br ${svc.grad} to-transparent border ${svc.border} rounded-xl flex items-center justify-center`}>
+              <ShimmerCard key={svc.label} delay={i * 0.1}
+                className="relative group bg-white/[0.03] hover:bg-white/[0.055] border border-white/[0.07] hover:border-white/[0.13] rounded-2xl p-6 transition-all hover:-translate-y-1.5 flex flex-col">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className={`w-12 h-12 bg-gradient-to-br ${svc.grad} to-transparent border ${svc.border} rounded-xl flex items-center justify-center flex-shrink-0`}>
                     <svc.icon className={`w-6 h-6 ${svc.text}`} />
                   </div>
-                  <div className="text-right">
-                    <div className="text-xl font-extrabold text-white">
-                      ₹<CountUp to={svc.priceNum} fmt={n => n.toLocaleString("en-IN")} duration={1100} />
-                    </div>
-                    <div className="text-xs text-white/32 mt-0.5 flex items-center justify-end gap-1">
-                      <Clock className="w-3 h-3" /> {svc.time}
-                    </div>
-                  </div>
+                  <h3 className="font-bold text-white text-lg">{svc.label}</h3>
                 </div>
-                <h3 className="font-bold text-white text-sm mb-2">{svc.label}</h3>
-                <p className="text-xs text-white/38 leading-relaxed mb-5">{svc.desc}</p>
-                <Link href="/login"
-                  className={`flex items-center justify-center gap-1.5 w-full border border-white/[0.08] hover:border-primary/50 hover:bg-primary/10 ${svc.text} hover:text-white text-sm font-semibold py-2.5 rounded-xl transition-all`}>
-                  Book Now <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
+                <p className="text-sm text-white/50 mb-5">{svc.desc}</p>
+                <ul className="space-y-2 mb-6 flex-1">
+                  {svc.items.map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-xs text-white/45">
+                      <CheckCircle className={`w-3.5 h-3.5 ${svc.text} mt-0.5 flex-shrink-0`} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex items-center justify-between pt-4 border-t border-white/[0.07]">
+                  <span className={`font-bold text-sm ${svc.text}`}>{svc.price}</span>
+                  <Link href="/login"
+                    className={`flex items-center gap-1.5 border border-white/[0.08] hover:border-primary/50 hover:bg-primary/10 ${svc.text} hover:text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all`}>
+                    Book Now <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </ShimmerCard>
             ))}
           </div>
@@ -995,12 +1047,10 @@ export function LandingPage() {
           <div className="max-w-2xl mb-16">
             <FadeIn><p className="text-primary text-xs font-bold uppercase tracking-[0.2em] mb-3">Why Choose Mechiee</p></FadeIn>
             <h2 className="text-4xl md:text-5xl font-extrabold text-white leading-tight mb-4">
-              <WordReveal>Built on trust.</WordReveal>
-              <br />
-              <span className="text-white/30"><WordReveal baseDelay={0.2}>Backed by quality.</WordReveal></span>
+              <WordReveal>Why Customers Love Mechiee</WordReveal>
             </h2>
             <FadeIn delay={0.35}>
-              <p className="text-white/42 text-lg">Every decision we make is designed around a stress-free, transparent service experience.</p>
+              <p className="text-white/42 text-lg">Experience the difference with our customer-first approach.</p>
             </FadeIn>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1020,6 +1070,59 @@ export function LandingPage() {
         </div>
       </section>
 
+      {/* ── Plans ─────────────────────────────────────────────────────── */}
+      <section id="plans" className="py-20 md:py-28 relative overflow-hidden">
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom,#07070F,#0C0B1A,#07070F)" }} />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl mb-14">
+            <FadeIn><p className="text-primary text-xs font-bold uppercase tracking-[0.2em] mb-3">Membership Plans</p></FadeIn>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-white leading-tight mb-4">
+              <WordReveal>Ride Smarter,</WordReveal>
+              <br />
+              <span className="text-white/30"><WordReveal baseDelay={0.2}>Choose Your Plan.</WordReveal></span>
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {PLANS.map((plan, i) => (
+              <FadeIn key={plan.name} delay={i * 0.1}
+                className={`relative rounded-2xl p-6 flex flex-col border transition-all hover:-translate-y-1.5 ${
+                  plan.highlight
+                    ? "bg-white/[0.06] border-emerald-500/30 shadow-xl shadow-emerald-900/20"
+                    : "bg-white/[0.025] border-white/[0.08]"
+                }`}>
+                {plan.highlight && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                    <span className="bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg shadow-emerald-900/40">Most Popular</span>
+                  </div>
+                )}
+                <div className="mb-5">
+                  <h3 className="text-xl font-extrabold text-white mb-1">{plan.name}</h3>
+                  <div className="flex items-baseline gap-1">
+                    <span className={`text-4xl font-extrabold ${plan.color}`}>{plan.price}</span>
+                    <span className="text-white/35 text-sm">{plan.period}</span>
+                  </div>
+                </div>
+                <ul className="space-y-3 mb-8 flex-1">
+                  {plan.features.map((f) => (
+                    <li key={f.label} className="text-sm text-white/60">
+                      <span className="font-semibold text-white/80">{f.label}:</span> {f.value}
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/login"
+                  className={`flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all ${
+                    plan.highlight
+                      ? "bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-900/30"
+                      : `border ${plan.border} ${plan.color} hover:bg-white/[0.04]`
+                  }`}>
+                  {plan.cta}
+                </Link>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── Testimonials ──────────────────────────────────────────────── */}
       <section className="py-20 md:py-28 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
@@ -1027,11 +1130,12 @@ export function LandingPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mb-14">
             <FadeIn><p className="text-primary text-xs font-bold uppercase tracking-[0.2em] mb-3">Real Reviews</p></FadeIn>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-white leading-tight">
-              <WordReveal>Don&apos;t take our word.</WordReveal>
-              <br />
-              <span className="text-white/30"><WordReveal baseDelay={0.22}>Ask our customers.</WordReveal></span>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-white leading-tight mb-4">
+              <WordReveal>What Our Customers Say</WordReveal>
             </h2>
+            <FadeIn delay={0.2}>
+              <p className="text-white/42 text-lg">Real stories from Pune. Real satisfaction.</p>
+            </FadeIn>
           </div>
           <TestimonialsCarousel />
         </div>
@@ -1131,13 +1235,13 @@ export function LandingPage() {
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <FadeIn><p className="text-white/55 text-xs font-bold uppercase tracking-[0.2em] mb-4">Ready to Experience Mechiee?</p></FadeIn>
           <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-5 leading-tight">
-            <WordReveal>Your bike deserves</WordReveal>
+            <WordReveal>Ready to Book Your</WordReveal>
             <br />
-            <WordReveal baseDelay={0.2}>better care.</WordReveal>
+            <WordReveal baseDelay={0.2}>First Service?</WordReveal>
           </h2>
           <FadeIn delay={0.3}>
             <p className="text-white/55 text-xl mb-10 max-w-lg mx-auto leading-relaxed">
-              Join 10,000+ bike owners who stopped wasting hours at garages. Book in 2 minutes, mechanic at your door.
+              Join thousands of satisfied customers and experience hassle-free bike servicing today.
             </p>
           </FadeIn>
           <FadeIn delay={0.45} className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -1149,7 +1253,7 @@ export function LandingPage() {
               />
               Book a Service Now <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <a href="https://wa.me/919876543210"
+            <a href="https://wa.me/918149297982"
               className="inline-flex items-center justify-center gap-2.5 bg-emerald-600 hover:bg-emerald-500 text-white px-10 py-4 rounded-xl font-bold text-base transition-all shadow-xl shadow-emerald-900/28 hover:-translate-y-0.5">
               <MessageCircle className="w-4 h-4" /> Chat on WhatsApp
             </a>
@@ -1161,15 +1265,15 @@ export function LandingPage() {
       <section id="cities" className="py-20 md:py-28 relative">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mb-12">
-            <FadeIn><p className="text-primary text-xs font-bold uppercase tracking-[0.2em] mb-3">Coverage</p></FadeIn>
+            <FadeIn><p className="text-primary text-xs font-bold uppercase tracking-[0.2em] mb-3">Coverage · Pune</p></FadeIn>
             <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-              <WordReveal>Cities we serve</WordReveal>
+              <WordReveal>Areas we serve in Pune</WordReveal>
             </h2>
             <FadeIn delay={0.2}>
               <p className="text-white/40 text-lg">
-                Expanding every month. Don&apos;t see your city?{" "}
-                <a href="https://wa.me/919876543210" className="text-primary hover:text-violet-300 underline underline-offset-4 transition-colors">WhatsApp us</a>
-                {" "}— we&apos;ll notify you when we launch near you.
+                Serving all major areas across Pune. Don&apos;t see your area?{" "}
+                <a href="https://wa.me/918149297982" className="text-primary hover:text-violet-300 underline underline-offset-4 transition-colors">WhatsApp us</a>
+                {" "}— we&apos;ll add it soon.
               </p>
             </FadeIn>
           </div>
@@ -1205,12 +1309,12 @@ export function LandingPage() {
               <img src="/logo.png" alt="Mechiee" className="h-10 w-auto mb-5"
                 style={{ filter:"brightness(0) invert(1)", opacity:0.85 }} />
               <p className="text-sm text-white/32 leading-relaxed mb-6 max-w-xs">
-                India&apos;s trusted doorstep two-wheeler service platform. Expert mechanics, transparent pricing, zero hassle.
+                Your trusted partner for professional two-wheeler servicing. We connect riders with verified garages across the city for reliable service experiences.
               </p>
               <div className="space-y-3">
-                <a href="tel:+919876543210" className="flex items-center gap-2.5 text-sm text-white/35 hover:text-white transition-colors"><Phone className="w-4 h-4 text-primary" /> +91 98765 43210</a>
-                <a href="https://wa.me/919876543210" className="flex items-center gap-2.5 text-sm text-white/35 hover:text-white transition-colors"><MessageCircle className="w-4 h-4 text-emerald-500" /> WhatsApp Support</a>
-                <div className="flex items-center gap-2.5 text-sm text-white/35"><MapPin className="w-4 h-4 text-primary" /> Bengaluru, Karnataka</div>
+                <a href="tel:+918149297982" className="flex items-center gap-2.5 text-sm text-white/35 hover:text-white transition-colors"><Phone className="w-4 h-4 text-primary" /> +91 8149297982</a>
+                <a href="mailto:mechiee.info@mechiee.in" className="flex items-center gap-2.5 text-sm text-white/35 hover:text-white transition-colors"><MessageCircle className="w-4 h-4 text-emerald-500" /> mechiee.info@mechiee.in</a>
+                <div className="flex items-center gap-2.5 text-sm text-white/35"><MapPin className="w-4 h-4 text-primary" /> Pune, Maharashtra</div>
               </div>
             </div>
             <div>
@@ -1238,7 +1342,7 @@ export function LandingPage() {
       </footer>
 
       {/* ── Floating WhatsApp ─────────────────────────────────────────── */}
-      <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer"
+      <a href="https://wa.me/918149297982" target="_blank" rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-emerald-500 hover:bg-emerald-400 text-white rounded-full flex items-center justify-center shadow-2xl shadow-emerald-900/50 hover:shadow-emerald-500/40 transition-all hover:scale-110 hover:-translate-y-1"
         title="Chat on WhatsApp">
         <MessageCircle className="w-7 h-7" />
