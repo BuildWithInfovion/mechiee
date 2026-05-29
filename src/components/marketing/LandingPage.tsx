@@ -47,15 +47,123 @@ const TICKS = Array.from({ length: 17 }, (_, i) => {
 const NEEDLE_START = toXY(START, R - 16); // needle tip at 0 kmh
 
 /* ─────────────────────────────────────────────────────────────────
+   SHARED HOOKS
+───────────────────────────────────────────────────────────────── */
+function useInView<T extends HTMLElement = HTMLDivElement>(threshold = 0.2) {
+  const ref  = useRef<T>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setInView(true); io.disconnect(); } },
+      { threshold }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [threshold]);
+  return [ref, inView] as const;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   SCROLL PROGRESS BAR
+───────────────────────────────────────────────────────────────── */
+function ScrollProgressBar() {
+  const [w, setW] = useState(0);
+  useEffect(() => {
+    const fn = () => {
+      const d = document.documentElement;
+      const total = d.scrollHeight - d.clientHeight;
+      setW(total > 0 ? (d.scrollTop / total) * 100 : 0);
+    };
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
+  return (
+    <div className="fixed top-0 left-0 right-0 z-[200] h-[2px] pointer-events-none">
+      <div
+        className="h-full bg-gradient-to-r from-violet-500 via-fuchsia-400 to-amber-400"
+        style={{ width: `${w}%`, transition: "width 0.1s linear" }}
+      />
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   COUNT-UP NUMBER
+───────────────────────────────────────────────────────────────── */
+function CountUp({ to, fmt, duration = 1600, className = "" }: {
+  to: number; fmt: (n: number) => string; duration?: number; className?: string;
+}) {
+  const [ref, inView] = useInView<HTMLSpanElement>(0.5);
+  const [n, setN]     = useState(0);
+  const done          = useRef(false);
+  useEffect(() => {
+    if (!inView || done.current) return;
+    done.current = true;
+    const t0 = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min((now - t0) / duration, 1);
+      setN(Math.round((1 - Math.pow(1 - p, 3)) * to));
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [inView, to, duration]);
+  return <span ref={ref} className={className}>{fmt(n)}</span>;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   SHIMMER CARD  – fades in + one-shot light sweep on entry
+───────────────────────────────────────────────────────────────── */
+function ShimmerCard({ delay = 0, className = "", children }: {
+  delay?: number; className?: string; children: React.ReactNode;
+}) {
+  const ref               = useRef<HTMLDivElement>(null);
+  const [entered, setEntered] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setEntered(true); io.disconnect(); } },
+      { threshold: 0.1 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div
+      ref={ref}
+      className={`relative overflow-hidden ${className}`}
+      style={{
+        opacity:    entered ? 1 : 0,
+        transform:  entered ? "translateY(0)" : "translateY(28px)",
+        transition: `opacity 0.65s ease ${delay}s, transform 0.65s ease ${delay}s`,
+      }}>
+      {entered && (
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 z-10 pointer-events-none animate-shimmer-sweep"
+          style={{
+            background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.07) 50%, transparent 60%)",
+            animationDelay: `${delay}s`,
+          }}
+        />
+      )}
+      {children}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────
    DATA
 ───────────────────────────────────────────────────────────────── */
 const SERVICES = [
-  { icon: Settings, label: "General Service",   desc: "Full tune-up, oil change, chain lube, brake & air filter check",   price: "₹499", time: "2–3 hrs",  popular: true,  grad: "from-violet-500/20", text: "text-violet-400", border: "border-violet-500/25" },
-  { icon: Droplets, label: "Oil Change",         desc: "Drain old oil, replace filter, fill fresh engine oil of your grade",  price: "₹299", time: "30 min",  popular: false, grad: "from-amber-500/20",  text: "text-amber-400",  border: "border-amber-500/25"  },
-  { icon: Bike,     label: "Tyre Service",        desc: "Puncture repair, pressure check, replacement (MRF/CEAT/Apollo)",    price: "₹149", time: "30–45 m", popular: false, grad: "from-sky-500/20",    text: "text-sky-400",    border: "border-sky-500/25"    },
-  { icon: Battery,  label: "Battery Service",     desc: "Testing, charging, warranty-backed battery replacement",            price: "₹999", time: "30 min",  popular: false, grad: "from-emerald-500/20",text: "text-emerald-400",border: "border-emerald-500/25"},
-  { icon: Zap,      label: "Electrical Repair",   desc: "Wiring, headlight, indicators, horn, self-start motor",            price: "₹199", time: "1–2 hrs", popular: false, grad: "from-yellow-500/20", text: "text-yellow-400", border: "border-yellow-500/25" },
-  { icon: Droplets, label: "Bike Wash & Polish",  desc: "Pressure wash, engine degrease, chain clean, body polish",         price: "₹199", time: "45 min",  popular: false, grad: "from-cyan-500/20",   text: "text-cyan-400",   border: "border-cyan-500/25"   },
+  { icon: Settings, label: "General Service",   desc: "Full tune-up, oil change, chain lube, brake & air filter check",   price: "₹499", priceNum: 499, time: "2–3 hrs",  popular: true,  grad: "from-violet-500/20", text: "text-violet-400", border: "border-violet-500/25" },
+  { icon: Droplets, label: "Oil Change",         desc: "Drain old oil, replace filter, fill fresh engine oil of your grade",  price: "₹299", priceNum: 299, time: "30 min",  popular: false, grad: "from-amber-500/20",  text: "text-amber-400",  border: "border-amber-500/25"  },
+  { icon: Bike,     label: "Tyre Service",        desc: "Puncture repair, pressure check, replacement (MRF/CEAT/Apollo)",    price: "₹149", priceNum: 149, time: "30–45 m", popular: false, grad: "from-sky-500/20",    text: "text-sky-400",    border: "border-sky-500/25"    },
+  { icon: Battery,  label: "Battery Service",     desc: "Testing, charging, warranty-backed battery replacement",            price: "₹999", priceNum: 999, time: "30 min",  popular: false, grad: "from-emerald-500/20",text: "text-emerald-400",border: "border-emerald-500/25"},
+  { icon: Zap,      label: "Electrical Repair",   desc: "Wiring, headlight, indicators, horn, self-start motor",            price: "₹199", priceNum: 199, time: "1–2 hrs", popular: false, grad: "from-yellow-500/20", text: "text-yellow-400", border: "border-yellow-500/25" },
+  { icon: Droplets, label: "Bike Wash & Polish",  desc: "Pressure wash, engine degrease, chain clean, body polish",         price: "₹199", priceNum: 199, time: "45 min",  popular: false, grad: "from-cyan-500/20",   text: "text-cyan-400",   border: "border-cyan-500/25"   },
 ];
 const TRUST_STRIP = [
   { icon: BadgeCheck,    text: "Verified Mechanics"   },
@@ -309,12 +417,93 @@ function Speedometer({ svgRef }: { svgRef: React.RefObject<SVGSVGElement> }) {
 }
 
 /* ─────────────────────────────────────────────────────────────────
+   TESTIMONIALS CAROUSEL  – swipe on mobile, 3-col grid on desktop
+───────────────────────────────────────────────────────────────── */
+function TestimonialsCarousel() {
+  const [active, setActive]       = useState(0);
+  const trackRef                  = useRef<HTMLDivElement>(null);
+  const [containerRef, visible]   = useInView(0.15);
+
+  const handleScroll = useCallback(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const card = el.children[0] as HTMLElement;
+    if (!card) return;
+    const step = card.offsetWidth + 16; // card width + gap-4
+    setActive(Math.max(0, Math.min(TESTIMONIALS.length - 1, Math.round(el.scrollLeft / step))));
+  }, []);
+
+  const goTo = (i: number) => {
+    const el = trackRef.current;
+    if (!el) return;
+    setActive(i);
+    const card = el.children[i] as HTMLElement;
+    if (card) el.scrollTo({ left: card.offsetLeft - 16, behavior: "smooth" });
+  };
+
+  return (
+    <div ref={containerRef}>
+      <div
+        ref={trackRef}
+        onScroll={handleScroll}
+        style={{ scrollbarWidth: "none" }}
+        className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-3 -mx-4 px-4 [&::-webkit-scrollbar]:hidden
+                   md:grid md:grid-cols-3 md:overflow-x-visible md:snap-none md:mx-0 md:px-0">
+        {TESTIMONIALS.map((t, i) => (
+          <div
+            key={t.name}
+            className="snap-start shrink-0 w-[82vw] md:w-auto bg-white/[0.03] border border-white/[0.07] rounded-2xl p-6 flex flex-col hover:border-white/[0.12] transition-colors"
+            style={{
+              opacity:    visible ? 1 : 0,
+              transform:  visible ? "translateY(0)" : "translateY(24px)",
+              transition: `opacity 0.65s ease ${i * 0.12}s, transform 0.65s ease ${i * 0.12}s`,
+            }}>
+            <div className="text-5xl font-serif text-primary/15 leading-none mb-2 -mt-1 select-none">&ldquo;</div>
+            <p className="text-white/60 text-sm leading-relaxed flex-1 mb-5">{t.text}</p>
+            <div className="flex items-center gap-1 mb-4">
+              {Array.from({ length: t.rating }).map((_, j) => (
+                <Star key={j} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+              ))}
+            </div>
+            <div className="flex items-center gap-3 pt-4 border-t border-white/[0.07]">
+              <div className={`w-10 h-10 ${t.bg} rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>{t.initials}</div>
+              <div>
+                <div className="font-semibold text-white text-sm">{t.name}</div>
+                <div className="text-xs text-white/35">{t.bike} &middot; {t.city}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Dot indicators — mobile only */}
+      <div className="flex justify-center gap-2 mt-5 md:hidden">
+        {TESTIMONIALS.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            aria-label={`Go to review ${i + 1}`}
+            className={`h-1.5 rounded-full transition-all duration-300 ${
+              active === i ? "w-6 bg-violet-400" : "w-1.5 bg-white/20"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────
    MAIN PAGE
 ───────────────────────────────────────────────────────────────── */
 export function LandingPage() {
   const [menuOpen, setMenuOpen]   = useState(false);
   const [scrolled, setScrolled]   = useState(false);
-  const [mounted,  setMounted]    = useState(false);   // hero text entrance
+  const [mounted,  setMounted]    = useState(false);
+
+  // Scroll-triggered section refs
+  const [stepsRef, stepsInView]   = useInView<HTMLDivElement>(0.15);
+  const [ctaRef,   ctaInView]     = useInView<HTMLElement>(0.2);
 
   // Speedometer scroll-drive refs
   const svgRef          = useRef<SVGSVGElement>(null);
@@ -402,6 +591,7 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#07070F] text-white overflow-x-hidden">
+      <ScrollProgressBar />
 
       {/* ── Announcement bar ─────────────────────────────────────────── */}
       <div className="relative overflow-hidden bg-gradient-to-r from-violet-950 via-primary to-violet-950 py-2.5 text-center text-xs font-semibold text-white">
@@ -665,15 +855,17 @@ export function LandingPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-white/[0.08] border border-white/[0.08] rounded-2xl overflow-hidden bg-white/[0.02]">
             {[
-              { value:"10,000+", label:"Services Completed", sub:"And growing every day",  icon:CheckCircle, color:"text-violet-400"  },
-              { value:"500+",    label:"Partner Garages",    sub:"Verified & trained",       icon:BadgeCheck,  color:"text-emerald-400" },
-              { value:"15+",     label:"Cities Active",      sub:"Expanding monthly",        icon:MapPin,      color:"text-sky-400"     },
-              { value:"4.8★",   label:"Customer Rating",    sub:"From 2,400+ reviews",      icon:Star,        color:"text-amber-400"   },
+              { to: 10000, fmt: (n: number) => n >= 10000 ? "10,000+" : n >= 1000 ? `${Math.floor(n / 1000)}K+` : n.toString(), label:"Services Completed", sub:"And growing every day",  icon:CheckCircle, color:"text-violet-400"  },
+              { to: 500,   fmt: (n: number) => n >= 500 ? "500+" : n.toString(),                                                  label:"Partner Garages",    sub:"Verified & trained",      icon:BadgeCheck,  color:"text-emerald-400" },
+              { to: 15,    fmt: (n: number) => n >= 15  ? "15+"  : n.toString(),                                                  label:"Cities Active",      sub:"Expanding monthly",       icon:MapPin,      color:"text-sky-400"     },
+              { to: 48,    fmt: (n: number) => `${(n / 10).toFixed(1)}★`,                                                        label:"Customer Rating",    sub:"From 2,400+ reviews",     icon:Star,        color:"text-amber-400"   },
             ].map((stat, i) => (
               <FadeIn key={stat.label} delay={i * 0.08}
                 className="flex flex-col p-7 lg:p-9 hover:bg-white/[0.02] transition-colors">
                 <stat.icon className={`w-5 h-5 ${stat.color} mb-4`} />
-                <div className="text-3xl lg:text-4xl font-extrabold text-white mb-1">{stat.value}</div>
+                <div className="text-3xl lg:text-4xl font-extrabold text-white mb-1">
+                  <CountUp to={stat.to} fmt={stat.fmt} />
+                </div>
                 <div className="text-sm font-semibold text-white/72">{stat.label}</div>
                 <div className="text-xs text-white/28 mt-1">{stat.sub}</div>
               </FadeIn>
@@ -701,7 +893,7 @@ export function LandingPage() {
               <p className="text-white/46 text-lg">No calls. No confusion. Select, schedule, and relax.</p>
             </FadeIn>
           </div>
-          <div className="grid md:grid-cols-4 gap-5">
+          <div ref={stepsRef} className="grid md:grid-cols-4 gap-5">
             {[
               { step:"01", icon:Search,         title:"Choose Service",    desc:"Browse 20+ services with upfront pricing. No surprises.",            grad:"from-violet-500/15", border:"border-violet-500/20", ic:"text-violet-400",  ib:"bg-violet-500/15"  },
               { step:"02", icon:CalendarCheck,   title:"Pick a Slot",       desc:"Same day or advance booking — any time that works for you.",          grad:"from-sky-500/15",    border:"border-sky-500/20",    ic:"text-sky-400",     ib:"bg-sky-500/15"     },
@@ -709,7 +901,17 @@ export function LandingPage() {
               { step:"04", icon:IndianRupee,     title:"Pay After",         desc:"Inspect the work. Pay via UPI, card, or cash. Zero advance.",          grad:"from-emerald-500/15",border:"border-emerald-500/20",ic:"text-emerald-400", ib:"bg-emerald-500/15" },
             ].map((step, i) => (
               <FadeIn key={step.step} delay={i * 0.1} className="relative group">
-                {i < 3 && <div className="hidden md:block absolute top-10 left-[calc(100%-0.5rem)] w-[calc(100%-1rem)] h-px border-t border-dashed border-white/[0.07] z-0" />}
+                {i < 3 && (
+                  <div
+                    className="hidden md:block absolute top-10 left-[calc(100%-0.5rem)] h-px z-0 origin-left"
+                    style={{
+                      width: "calc(100% - 1rem)",
+                      background: "linear-gradient(90deg, rgba(124,58,237,0.35) 0%, rgba(124,58,237,0.1) 60%, transparent 100%)",
+                      transform: stepsInView ? "scaleX(1)" : "scaleX(0)",
+                      transition: `transform 1s cubic-bezier(0.22,1,0.36,1) ${0.5 + i * 0.25}s`,
+                    }}
+                  />
+                )}
                 <div className={`relative z-10 bg-gradient-to-b ${step.grad} to-transparent border ${step.border} rounded-2xl p-6 h-full transition-all group-hover:-translate-y-1.5`}>
                   <div className="flex items-center justify-between mb-5">
                     <div className={`w-12 h-12 ${step.ib} rounded-xl flex items-center justify-center`}>
@@ -748,7 +950,7 @@ export function LandingPage() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {SERVICES.map((svc, i) => (
-              <FadeIn key={svc.label} delay={i * 0.07}
+              <ShimmerCard key={svc.label} delay={i * 0.07}
                 className="relative group bg-white/[0.03] hover:bg-white/[0.055] border border-white/[0.07] hover:border-white/[0.13] rounded-2xl p-6 transition-all hover:-translate-y-1.5">
                 {svc.popular && (
                   <div className="absolute -top-3 left-5">
@@ -760,7 +962,9 @@ export function LandingPage() {
                     <svc.icon className={`w-6 h-6 ${svc.text}`} />
                   </div>
                   <div className="text-right">
-                    <div className="text-xl font-extrabold text-white">{svc.price}</div>
+                    <div className="text-xl font-extrabold text-white">
+                      ₹<CountUp to={svc.priceNum} fmt={n => n.toLocaleString("en-IN")} duration={1100} />
+                    </div>
                     <div className="text-xs text-white/32 mt-0.5 flex items-center justify-end gap-1">
                       <Clock className="w-3 h-3" /> {svc.time}
                     </div>
@@ -772,7 +976,7 @@ export function LandingPage() {
                   className={`flex items-center justify-center gap-1.5 w-full border border-white/[0.08] hover:border-primary/50 hover:bg-primary/10 ${svc.text} hover:text-white text-sm font-semibold py-2.5 rounded-xl transition-all`}>
                   Book Now <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
-              </FadeIn>
+              </ShimmerCard>
             ))}
           </div>
           <FadeIn delay={0.2}>
@@ -829,27 +1033,7 @@ export function LandingPage() {
               <span className="text-white/30"><WordReveal baseDelay={0.22}>Ask our customers.</WordReveal></span>
             </h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-5">
-            {TESTIMONIALS.map((t, i) => (
-              <FadeIn key={t.name} delay={i * 0.1}
-                className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-6 flex flex-col hover:border-white/[0.12] transition-all hover:-translate-y-1">
-                <div className="text-5xl font-serif text-primary/15 leading-none mb-2 -mt-1 select-none">&ldquo;</div>
-                <p className="text-white/60 text-sm leading-relaxed flex-1 mb-5">{t.text}</p>
-                <div className="flex items-center gap-1 mb-4">
-                  {Array.from({ length: t.rating }).map((_, i2) => (
-                    <Star key={i2} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                  ))}
-                </div>
-                <div className="flex items-center gap-3 pt-4 border-t border-white/[0.07]">
-                  <div className={`w-10 h-10 ${t.bg} rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>{t.initials}</div>
-                  <div>
-                    <div className="font-semibold text-white text-sm">{t.name}</div>
-                    <div className="text-xs text-white/35">{t.bike} &middot; {t.city}</div>
-                  </div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
+          <TestimonialsCarousel />
         </div>
       </section>
 
@@ -928,8 +1112,14 @@ export function LandingPage() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────────────── */}
-      <section className="relative py-24 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-900/65 via-primary/42 to-purple-950/65" />
+      <section ref={ctaRef} className="relative py-24 md:py-32 overflow-hidden">
+        <div
+          className="absolute inset-0 bg-gradient-to-br from-violet-900/65 via-primary/42 to-purple-950/65"
+          style={{
+            clipPath: ctaInView ? "circle(150% at 50% 50%)" : "circle(0% at 50% 50%)",
+            transition: "clip-path 1.1s cubic-bezier(0.22,1,0.36,1)",
+          }}
+        />
         <div className="absolute inset-0 pointer-events-none"
           style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.04) 1px,transparent 1px)", backgroundSize: "40px 40px" }} />
         <div className="absolute top-0 left-0 right-0 h-px bg-white/10" />
@@ -952,7 +1142,11 @@ export function LandingPage() {
           </FadeIn>
           <FadeIn delay={0.45} className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/login"
-              className="group inline-flex items-center justify-center gap-2.5 bg-white hover:bg-white/92 text-primary px-10 py-4 rounded-xl font-bold text-base transition-all shadow-2xl shadow-black/20 hover:-translate-y-0.5">
+              className="group inline-flex items-center justify-center gap-2.5 bg-white hover:bg-white/92 text-primary px-10 py-4 rounded-xl font-bold text-base transition-all shadow-2xl shadow-black/20 hover:-translate-y-0.5 relative overflow-hidden">
+              <span aria-hidden="true"
+                className="absolute inset-0 pointer-events-none animate-shimmer-loop"
+                style={{ background: "linear-gradient(105deg, transparent 40%, rgba(109,40,217,0.15) 50%, transparent 60%)" }}
+              />
               Book a Service Now <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <a href="https://wa.me/919876543210"
@@ -979,18 +1173,26 @@ export function LandingPage() {
               </p>
             </FadeIn>
           </div>
-          <FadeIn delay={0.15} className="flex flex-wrap gap-3">
-            {CITIES.map((city) => (
-              <div key={city}
-                className="group flex items-center gap-2 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.07] hover:border-white/[0.14] rounded-xl px-5 py-3 transition-all cursor-default">
-                <MapPin className="w-3.5 h-3.5 text-primary group-hover:text-violet-300 transition-colors" />
-                <span className="text-sm font-medium text-white/60 group-hover:text-white transition-colors">{city}</span>
-              </div>
+          <div className="flex flex-wrap gap-3">
+            {CITIES.map((city, i) => (
+              <FadeIn key={city} delay={0.04 + i * 0.03}>
+                <div className="relative group flex items-center gap-2 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.07] hover:border-white/[0.14] rounded-xl px-5 py-3 transition-all cursor-default">
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 rounded-xl border border-primary/40 animate-ping-once pointer-events-none"
+                    style={{ animationDelay: `${0.04 + i * 0.03}s` }}
+                  />
+                  <MapPin className="w-3.5 h-3.5 text-primary group-hover:text-violet-300 transition-colors" />
+                  <span className="text-sm font-medium text-white/60 group-hover:text-white transition-colors">{city}</span>
+                </div>
+              </FadeIn>
             ))}
-            <div className="flex items-center gap-2 bg-primary/[0.08] border border-primary/20 rounded-xl px-5 py-3">
-              <span className="text-sm font-semibold text-primary">+ More coming soon</span>
-            </div>
-          </FadeIn>
+            <FadeIn delay={0.04 + CITIES.length * 0.03}>
+              <div className="flex items-center gap-2 bg-primary/[0.08] border border-primary/20 rounded-xl px-5 py-3">
+                <span className="text-sm font-semibold text-primary">+ More coming soon</span>
+              </div>
+            </FadeIn>
+          </div>
         </div>
       </section>
 

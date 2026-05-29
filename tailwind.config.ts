@@ -89,6 +89,14 @@ const config: Config = {
           from: { transform: "rotate(0deg)" },
           to: { transform: "rotate(360deg)" },
         },
+        "shimmer-sweep": {
+          "0%":   { transform: "translateX(-100%) skewX(-12deg)" },
+          "100%": { transform: "translateX(280%) skewX(-12deg)" },
+        },
+        "ping-once": {
+          "0%":   { transform: "scale(1)",   opacity: "0.5" },
+          "100%": { transform: "scale(1.8)", opacity: "0"   },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -97,6 +105,9 @@ const config: Config = {
         "marquee": "marquee 18s linear infinite",
         "float-up": "float-up 4s ease-in-out infinite",
         "spin-slow": "spin-slow 20s linear infinite",
+        "shimmer-sweep": "shimmer-sweep 0.75s ease-out forwards",
+        "shimmer-loop":  "shimmer-sweep 2.8s ease-in-out 0.8s infinite",
+        "ping-once":     "ping-once 0.85s ease-out forwards",
       },
     },
   },
